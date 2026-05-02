@@ -1,0 +1,11 @@
+deepseek_api.txt
+.env
+.env.*
+__pycache__/
+*.pyc
+*.pyo
+*.zip
+tmp_server_ready.txt
+.edge-test/
+huggingface_space_package_*/
+github_share_package_*/

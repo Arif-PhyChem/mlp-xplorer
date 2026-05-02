@@ -1,0 +1,1969 @@
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 https://doi.org/10.1088/2632-2153/ad8f13
+OPEN ACCESS
+RECEIVED
+21 August 2024
+REVISED
+28 October 2024
+ACCEPTED FOR PUBLICATION
+5 November 2024
+PUBLISHED
+19 November 2024
+Original Content from
+this work may be used
+under the terms of the
+Creative Commons
+Attribution 4.0 licence.
+Any further distribution
+of this work must
+maintain attribution to
+the author(s) and the title
+of the work, journal
+citation and DOI.
+TOPICAL REVIEW
+Molecular quantum chemical data sets and databases for
+machine learning potentials
+Arif Ullah1,, Yuxinxin Chen2 and Pavlo O Dral2,3,
+1 School of Physics and Optoelectronic Engineering, Anhui University, Hefei 230601, Anhui, People's Republic of China
+2 State Key Laboratory of Physical Chemistry of Solid Surfaces, College of Chemistry and Chemical Engineering, Fujian Provincial Key
+Laboratory of Theoretical and Computational Chemistry, Xiamen University, Xiamen 361005, Fujian, People's Republic of China
+3 Institute of Physics, Faculty of Physics, Astronomy, and Informatics, Nicolaus Copernicus University in Toru´
+n, ul. Grudziadzka 5,
+87-100 Toru´
+n, Poland
+ Authors to whom any correspondence should be addressed.
+E-mail: arif@ahu.edu.cn and dral@xmu.edu.cn
+Keywords: database, quantum chemistry, electronic properties, data set, machine learning
+Abstract
+The field of computational chemistry is increasingly leveraging machine learning (ML) potentials
+to predict molecular properties with high accuracy and efficiency, providing a viable alternative to
+traditional quantum mechanical (QM) methods, which are often computationally intensive.
+Central to the success of ML models is the quality and comprehensiveness of the data sets on which
+they are trained. Quantum chemistry data sets and databases, comprising extensive information on
+molecular structures, energies, forces, and other properties derived from QM calculations, are
+crucial for developing robust and generalizable ML potentials. In this review, we provide an
+overview of the current landscape of quantum chemical data sets and databases. We examine key
+characteristics and functionalities of prominent resources, including the types of information they
+store, the level of electronic structure theory employed, the diversity of chemical space covered, and
+the methodologies used for data creation. Additionally, an updatable resource is provided to track
+new data sets and databases at https://github.com/Arif-PhyChem/datasets_and_databases_
+4_MLPs. This resource also has the overview in a machine-readable database format with the
+Jupyter notebook example for analysis. Looking forward, we discuss the challenges associated with
+the rapid growth of quantum chemical data sets and databases, emphasizing the need for updatable
+and accessible resources to ensure the long-term utility of them. We also address the importance of
+data format standardization and the ongoing efforts to align with the FAIR principles to enhance
+data interoperability and reusability. Drawing inspiration from established materials databases, we
+advocate for the development of user-friendly and sustainable platforms for these data sets and
+databases.
+1. Introduction
+Accurate and efficient prediction of molecular properties is a cornerstone of computational chemistry. While
+quantum mechanical (QM) calculations provide unparalleled precision, their computational cost often
+prevents their application for large-scale systems. To bridge this gap, machine learning (ML) potentials have
+emerged as promising alternatives, capable of predicting molecular properties with reasonable accuracy and
+remarkable efficiency.
+Central to the development of robust ML potentials is the availability of high-quality training data.
+Quantum chemical data sets and databases serve as the foundation for these models, providing essential
+information on molecular structures, energies, forces, and other properties. The breadth and depth of these
+data sets and databases directly influence the ability of ML models to learn complex chemical phenomena
+and generalize to new systems. Furthermore, accessible and well-curated data sets and databases are essential
+for reproducibility and benchmarking in the field.
+© 2024 The Author(s). Published by IOP Publishing Ltd
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Given the plethora of ML potentials and their growing importance in computational chemistry, this
+review aims to provide an overview of the current landscape of molecular quantum chemical data sets and
+databases. We explore the key characteristics and functionalities of prominent resources, examining the type
+of information they store (e.g. molecular structures, various properties), the level of electronic structure
+theory employed (e.g. density functional theory (DFT), second-order Møller­Plesset perturbation theory
+(MP2)), the size and diversity of the chemical space they cover, and the methodologies used for data creation.
+While the possible selection of the data sets and databases is very broad, we mostly focus on the data
+collections which were specifically designed with the goal of developing and evaluating ML potentials of
+molecules or have a potential to be used for such applications. Data sets for both ground and excited state
+potentials are included and many data sets also contain properties that go beyond energies and forces. We
+also included data collections that provide the sets of 3D nuclear geometries and energies which are
+frequently used in the context of structure-property relations such as QM9 data set [1] but in principle can
+be used to train ML potentials and, indeed, QM9 is sometimes used to benchmark ML potentials [2]. Surely,
+there are more data sets generated in the plenitude of studies involving MLPs, which either served to
+highlight the particular strengths and shortcomings of a new methodology such as a new active learning
+protocol or were a `by-product' of investigating an interesting chemical phenomenon. Although these data
+collections are undoubtedly very useful, we have to exclude them to limit the scope of our current overview.
+Here, we aim to focus on the data sets generated with as little as possible involvement of ML potentials to
+have a collection less biased to a particular ML potential. This is admittedly hard to avoid as, e.g. ANI-1x data
+set [3] was generated using techniques such as normal mode sampling but the final composition was
+obtained via pool-based active learning with the ANI-type universal potential.
+With these limitations in mind, we introduce an updatable online resource designed to track the
+emerging data sets and databases, ensuring researchers have access to the latest and most relevant data
+(https://github.com/Arif-PhyChem/datasets_and_databases_4_MLPs). This GitHub repository allows other
+researchers to make updates by creating pull requests or issues and it is less limited than the current overview
+because, e.g. the researchers can add data collections generated with active learning. In addition, for easier
+navigation through the data resources, we collect them in the JSON database format and provide Jupyter
+notebooks with examples to, e.g. convert it to the common spreadsheet formats or create the tables like
+table 1 in this Review.
+This review also highlights several key challenges in the field, including ensuring the long-term
+accessibility of data sets, maintaining updatable resources, and advancing data format standardization in line
+with the FAIR principles [4]. By identifying these challenges, we aim to guide researchers toward the most
+effective use of available resources and best practices for future developments.
+2. Overview
+In table 1, we present a concise overview of the data sets and databases discussed here, organized in
+alphabetical order, as of September 2024.
+3. Data sets and databases
+3.1. QM9
+QM9 data set is one of the most widely used data sets, it is a collection of molecular structures and properties
+for 134 000 small organic molecules [1]. QM9 targets neutral organic molecules containing up to nine
+non-hydrogen atoms (C, N, O, and F). This selection corresponds to the GDB-9 subset of the larger GDB-17
+database [52]. While ensuring a manageable size, it captures a significant portion of organic chemical space.
+Notably, the data set incorporates relevant biomolecules like amino acids (glycine, alanine) and nucleobases
+(cytosine, uracil, thymine), alongside pharmaceutically important building blocks (pyruvic acid, piperazine,
+hydroxyurea). Among the 134 000 molecules, 621 distinct chemical formulas (stoichiometries) are present,
+with C7
+H10
+O2
+being the most abundant, containing 6095 constitutional isomers.
+Computational methodology: QM9 focuses on organic molecules with selection process opting for neutral
+molecules and excluding cations and anions. While, zwitterions are kept due to their importance in
+biomolecules like amino acids, heavier halogens (sulfur, bromine, chlorine, iodine) are excluded from the
+selection. Initial 3D structures were generated using SMILES strings followed by geometry optimization
+using computational methods (pre-optimization at PM7 semi-empirical level with MOPAC software [53]
+and final optimization at B3LYP/6-31G(2df,p) [54­57] with the Gaussian 09 software [58]). Stringent
+2
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Table 1. A brief overview of the data sets and databases discussed in this paper, organized alphabetically for easy reference.
+Data set / Database Description Methods; Software Used Data Access
+AIMEl-DB [5] Data set containing atomic
+properties for 44 K small
+organic molecules
+B3LYP/6-31G(2df,p);Gaussian
+09
+Zenodo
+Alchemy [6] 19 487 organic molecules
+containing up to 14 heavy
+atoms from the GDB-17
+database with 12 quantum
+mechanical properties
+B3LYP/6-31G(2df,p),
+MMFF94, HF/STO-3G; PySCF,
+RDKit
+GitHub
+ANI-1 [7] A collection of non-equilibrium
+DFT total energy calculations
+for organic molecules,
+encompassing approximately
+20 million conformations of
+57 462 small organic molecules
+MMFF94 force field and
+B97X/6-31G(d); RDKit and
+Gaussian 09
+Figshare, GitHub
+ANI-1x and
+ANI-1ccx [3]
+The ANI-1x data set includes
+DFT calculations for
+approximately 5 million
+organic molecule
+conformations while the
+ANI-1ccx data set is a subset of
+ANI-1x data set, recomputed
+with CCSD(T)/CBS level of
+theory
+Bootstrapping, Four active
+learning sampling techniques,
+B97X/6-31G,
+B97X/def2-TZVPP,
+CCSD(T)/CBS and MBIS;
+RDKit, ASE , Gaussian 09,
+ORCA, HORTON software
+library
+Figshare, GitHub
+ANI-2x [8] 8.9 million nonequilibrium
+neutral singlet molecules with
+seven chemical elements (H, C,
+N, O, S, F, Cl)
+B97X/6-31G; Gaussian 09 Zenodo
+bigQM7 [9] Ground-state properties and
+electronic spectra for over
+12 880 molecules with 7 CONF
+atoms, sourced from the
+GDB11 data set
+UFF, ConnGO workflow,
+3-21G, def2SVP, def2TZVP,
+def2SVPD, Zindo and PM6;
+Gaussian
+Link1, Link2, Link3
+C7O2H10-17 [10] MD trajectories of 5000 steps
+for 113 isomers of C7O2H10
+PBE functional; FHI-aims Link
+CheMFi [11] A multifidelity compilation of
+quantum chemical properties
+derived from a subset of the
+WS22 database, featuring
+135 000 geometries sampled
+from nine distinct molecules. It
+encompasses five different
+levels of fidelity, each
+corresponding to a specific
+basis set size (STO-3G, 3-21G,
+6-31G, def2-SVP, def2-TZVP)
+TD-DFT, CAM-B3LYP,
+STO-3G, 3-21G, 6-31G,
+def2-SVP and def2-TZVP;
+ORCA
+GitHub
+COMPAS
+Project [12­14]
+The COMPAS project provides
+structures and properties for
+polycyclic aromatic systems
+where COMPAS-1 (43 k),
+COMPAS-2 (0.5 million), and
+COMPAS-3 (40k) focus on
+different types of polycyclic
+molecules. All contain
+molecules up to 11 rings (xTB),
+calculated at DFT level using
+CaGe, GFN1/2-xTB,
+B3LYP-D3(BJ)/def2-SVP, and
+CAM-B3LYP-D3BJ/aug-cc-
+pVDZ
+GFN2-xTB, GFN1-xTB,
+B3LYP-D3(BJ)/def2-SVP,
+CAM-B3LYP-D3BJ/def2-SVP,
+CAM-B3LYP-D3BJ/aug-cc-
+pVDZ//CAM-B3LYP-
+D3BJ/def2-SVP; xTB, Gage,
+ORCA 4.2.0
+GitLab
+(Continued.)
+3
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Table 1. (Continued.)
+Data set / Database Description Methods; Software Used Data Access
+CREMP [15] CREMP data set (36 k
+macrocyclic peptides, 31.3
+million conformers) for ML
+training. Generated using
+CREST, RDKit, ETKDGv3,
+MMFF94, GFN2-xTB, and
+metadynamics. Properties
+calculated at semiempirical
+level. CREMP-CycPeptMPDB
+(8.7 million conformers) added
+for passive membrane
+permeability
+GMMFF94, GFN2-xTB,
+ETKDGv3; CREST, xTB
+GitHub, Link1, Link2
+GEOM [16] Conformers for mid-sized
+organic molecules from QM9
+and experimental datasets
+related to physical chemistry,
+biophysics, and physiology
+MMFF, GFN2-xTB,
+r2SCAN-3c/mTZVPP; ORCA
+5.0.2, CREST, RDKit, CENSO
+GitHub
+ISO17 [17] An extension of C7O2H10-17
+data set, consisting of 129
+isomers
+PBE functional (GGA and
+Tkatchenko­Scheffler (TS) van
+der Waals correction method);
+FHI-aims
+Link
+MD17 and its later
+versions [18­20]
+Ab initio molecular dynamics
+trajectories collection along
+with potential energies and
+forces for ten small organic
+molecules
+MD, PBE + vdW-TS,
+PBE/def2-SVP, CCSD,
+CCSD(T) and DFT FHI-aims;
+i-PI code, ORCA and FHI-aims
+Link
+MD22 [21] MD trajectories for seven
+systems spanning four major
+classes of biomolecules and
+supramolecular structures
+PBE+MBD level of theory with
+`light' and `tight' basis sets
+within the FHI-aims
+framework; FHI-aims and i-PI
+Link
+MultiXC-
+QM9 [22]
+Expands upon QM9 by
+including data from 76
+different DFT functionals
+alongside three basis sets and a
+semi-empirical method
+(GFN2-xTB)
+DFT (76 functionals), three
+basis sets and GFN2-xTB; the
+ADF software package
+Figshare
+2DFT [23] A comprehensive collection of
+about 16 million conformers
+for 2 million drug-like
+molecules, offering
+DFT-calculated energies, forces,
+and various properties, along
+with relaxation trajectories for
+many molecules
+B97X-D/def2-SVP; Psi4 GitHub
+OFF-ON [24] Organic fragments from
+organocatalysts that are
+non-modular
+DFTB3, PBE0-D3/def2-SVP;
+DFTB+, TeraChem
+Link
+OrbNet
+Denali [25]
+A dataset used to train the
+OrbNet Denali model,
+consisting of 2.3 million
+geometries with energy labels
+calculated at the DFT and
+semi-empirical levels, based on
+the ChEMBL27 database
+GFN1-xTB, AIMD and
+B97X-D3/def2-TZVP;
+ENTOS BREEZE,
+DIMORPHITE-DL and
+ENTOS QCORE
+Figshare
+PC9 [26] 99 234 distinct molecules, a
+subset of PubChemQC project
+selected based on the
+limitations of QM9 data set
+(size of up to 9 heavy atoms in
+the range C, N, O and F)
+Same as for the
+PubChemQCDatabase
+Figshare, Zenodo
+(Continued.)
+4
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Table 1. (Continued.)
+PubChemQC
+B3LYP/6-
+31G//PM6 [27]
+A collection of electronic
+properties for nearly 86 million
+molecules, encompassing a
+broad spectrum of essential
+compounds and biomolecules
+with molecular weights up to
+1000
+B3LYP/6-31G and PM6;
+GAMESS
+Link
+PubChemQC
+Database [28]
+3 million molecules optimized
+for their ground states and over
+2 million molecules with
+low-lying excited states
+PM3 method, Hartree­Fock
+method (STO-6G basis set),
+B3LYP functional (VWN3) and
+6-31G basis set, TD-DFT with
+the B3LYP functional and
+6-31+G basis set; Open Babel,
+Firefly, SMASH and GAMESS
+Link
+PubChemQC
+PM6 [29]
+PM6 data for 221 million
+molecules, including optimized
+geometries and electronic
+structures
+PM6 geometry optimization;
+Open Babel and Gaussian 09
+Link
+QCDGE [30] An extensive collection of
+ground and excited-state
+properties for 443 106 organic
+molecules, each containing up
+to ten heavy atoms, including
+carbon, nitrogen, oxygen, and
+fluorine. These molecules are
+sourced from well-known
+databases such as QM9,
+PubChemQC, and GDB-11
+GFN2-xTB, DFT (B3LYP,
+6-31G(d), D3(BJ) dispersion
+corrections) and
+TD-DFT(B97X-D, 6-31
+G(d)); Open Babel, xtb and
+Gaussian 16 package
+Link
+QM1B [31] A low-resolution DFT data set,
+QM1B, generated using PySCF
+IPU, contains one billion
+examples of molecules with
+9­11 heavy atoms. It was
+created from 1.09 M SMILES in
+the GDB-11 database,
+computing properties like the
+HOMO-LUMO gap for up to
+1000 conformers per molecule
+B3LYP/STO-3G; PySCFIPU GitHub
+QM7 [32] Focuses on a subset of 7165
+small organic molecules from
+the GDB-13 database,
+providing Coulomb matrices,
+atomization energies, atomic
+charges, and Cartesian
+coordinates
+PBE0/tier2 basis set; Open
+Babel and FHI-aims
+Link
+QM7-X [33] 4.2 million structures of small
+organic molecules (containing
+up to seven non-hydrogen
+atoms) with a rich set of 42
+properties
+MMFF94, DFTB3+MBD;
+Open Babel, Confab, DFTB+,
+ASE, and FHI-aims
+Zenodo
+QM7b [34] An extension of QM7,
+providing data on 7211 small
+organic molecules including 14
+properties such as atomization
+energy, static polarizability, and
+frontier orbital eigenvalues,
+calculated using DFT and other
+quantum chemistry methods
+UFF, Zindo, SCS, PBE, PBE0,
+and GW calculations; Open
+Babel, ORCA, and FHI-aims
+code (tight settings/tier2 basis
+set)
+Link
+(Continued.)
+5
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Table 1. (Continued.)
+Data set / Database Description Methods; Software Used Data Access
+QM8 [35] Provides electronic spectra data
+for approximately 21 786 small
+organic molecules, derived
+from QM9, calculated using
+TD-DFT and other
+excited-state methods
+CC2 method,
+B3LYP/6-31G(2df,p),
+long-range corrected TD-DFT,
+PBE0 and CAM-B3LYP
+functionals, def2SVP and
+def2TZVP; TURBOMOLE
+program
+Link
+QM9 [1] A collection of molecular
+structures and properties for
+134 000 small organic
+molecules
+B3LYP/6-31G(2df,p); Gaussian
+09
+Figshare
+QM9-G4MP2 [36] Provides highly accurate
+G4MP2 calculations for the
+molecular structures within
+QM9
+G4MP2; Gaussian 16 Figshare
+QM9S [37] A collection of 33 885 organic
+molecules from QM9 for
+training/testing DetaNet where
+geometries were re-optimized
+with Gaussian 16
+(B3LYP/def-TZVP). Molecular
+properties (scalar, vector,
+tensor) were calculated at the
+same level, including IR,
+Raman, and UV­Vis spectra
+from frequency analysis and
+TD-DFT
+B3LYP/def-TZVP and TD-DFT;
+Gaussian16 package (B.01
+version)
+Figshare
+QM-sym [38] 135 000 structures with Cnh
+symmetry
+B3LYP/6-31G(2df,p); Gaussian
+09
+GitHub, Figshare
+QM-symex [39] The QM-sym data set has been
+expanded to include an
+additional 38 000 molecules,
+providing valuable information
+on excited-state properties
+TD-B3LYP/6-31G//B3LYP/6-
+31G(2df,p); Gaussian
+09
+Figshare
+QM-22 [40] A compilation of molecular
+data sets specifically curated for
+DMC calculations of the
+zero-point state
+Each data set within QM22
+employs unique methodologies
+tailored to the specific
+molecules involved. Detailed
+computational methods for
+each data set can be found in
+their corresponding
+publications
+GitHub
+QMugs [41] Quantum-mechanical
+properties of over 665 000
+drug-like molecules extracted
+from the ChEMBL database
+Merck molecular force field,
+GFN2-xTB and
+B97X-D/def2-SVP; RDKit,
+xTB software package and Psi4
+Link
+revQM9 [42] The revision of QM9 data set
+with the quantum chemical
+properties recalculated at the
+aPBE0 level
+aPBE0/cc-pVTZ; PySCF 2.4.0 Zenodo
+SPICE [43, 44] 2008 628 conformations of
+113 999 drug-like small
+molecules and proteins
+B97M-D3BJ/def2-TZVPPD;
+Psi4
+Zenodo, GitHub
+TensorMol
+ChemSpider [45]
+3 million conformations from
+15k different molecules,
+sourced from the ChemSpider
+database
+B97X-D and 6-311G;
+QChem program
+Link (not accessible
+anymore, see main text)
+tmQM [46] 86k transition metal-organic
+molecules based on Cambridge
+structural database
+GFN2-xTB, TPSSh/def2-SVP;
+xTB, Gaussian 16
+GitHub, Link
+(Continued.)
+6
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Table 1. (Continued.)
+Transition1x [47] 9.6 million data points, each
+meticulously generated using
+DFT calculations with forces
+and energies for a staggering
+10 000 organic reactions
+B97X, 6-31G(d), NEB and
+CINEB; ASE and ORCA
+Figshare, GitLab
+VIB5 [48] Ab initio quantum chemical
+data for five small polyatomic
+molecules with significant
+astrophysical relevance
+MP2/cc-pVTZ,
+CCSD(T)/cc-pVQZ and HF
+with cc-pVTZ and cc-pVQZ
+basis sets, CCSD(T) with
+extrapolated complete basis set,
+core-valence electron
+correlation energy corrections,
+and diagonal
+Born­Oppenheimer
+corrections; CFOUR and
+MOLPRO
+Figshare
+VQM24 [49] QM properties of 258 242
+unique constitutional isomers
+and 577 705 conformers of
+varying stoichiometries,
+focusing on molecules
+composed of up to five heavy
+atoms from C, N, O, F, Si, P, S,
+Cl, Br
+MMFF94, GFN2-xTB,
+B97X-D3/cc-pVDZ and
+DMC@PBE0/ccECP/ccpVQZ;
+Surge, RDKit, CREST, Psi4 and
+QMCPACK
+Zenodo
+WS22 [50]
+Database
+1.18 million molecular
+geometries (equilibrium and
+non-equilibrium) for ten
+organic molecules containing
+up to 22 atoms
+Wigner sampling approach,
+geometry interpolation scheme,
+PBE0/6-311G; Newton-X·CS
+and Gaussian 09
+Zenodo
+xxMD [51] Excited-state molecular
+dynamics data set for four
+molecular systems chosen for
+their photochemical activity:
+azobenzene, malonaldehyde,
+stilbene, and dithiophene
+Surface hopping dynamics,
+SA-CASSCF electronic theory,
+unrestricted KS-DFT (M06 and
+6-31G); SHARC, OpenMolcas
+22.06 and Psi4
+GitHub, Zenodo
+convergence criteria were employed to guarantee high-quality structures. Following geometry optimization,
+the B3LYP/6-31G(2df,p) level was employed to calculate various properties for each molecule. Notably, for
+6095 constitutional isomers of C7
+H10
+O2
+, a more accurate method G4MP2 [59] was employed for energetics
+calculations.
+Data accessibility: QM9 data set is publicly available on Figshare at https://doi.org/10.6084/m9.figshare.
+978904 [60]. For each molecule, atomic coordinates and calculated properties are stored in a file named
+dataset_index.xyz. The included properties are equilibrium geometries, atomization energies,
+enthalpies, entropies, frontier orbital eigenvalues, dipole moments, harmonic frequencies, polarizabilities,
+and thermochemical energetics.
+3.2. QM9-G4MP2
+The QM9-G4MP2 database [36] is built upon the existing QM9 data set by providing highly accurate
+G4MP2 (Gaussian-4 theory using reduced order perturbation [59, 61]) calculations for the molecular
+structures within QM9. The G4MP2 approach employed in this database comprises the calculations with a
+series of methods including DFT, Hartree­Fock (HF), Møller­Plesset perturbation theory (MP2), and
+coupled-cluster single and double excitations with perturbative triple correction (CCSD(T)).
+Computational methodology: To generate the QM9-G4MP2 data set, the geometries of all QM9 molecules
+underwent reoptimization using the B3LYP/6-31G(2df,p) level theory, followed by single-point energy
+calculations employing CCSD(T,FC)/6-31G(d), MP2(FC)/G3MP2largeXP, RHF/mod-aug-cc-pVTZ, and
+RHF/mod-aug-cc-pVQZ methods. These calculations were executed using the Gaussian 16 package (version
+A.03) [62]. Additionally, to derive accurate atomization energies, G4MP2 calculations were performed for
+individual atoms of H, C, N, O, and F, maintaining identical charge and spin multiplicity as those within the
+7
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+QM9 molecules. Note that these calculations were conducted in varying computational environments and
+with Gaussian 16 instead of Gaussian 09 employed in QM9.
+Data accessibility: The QM9-G4MP2 database is accessible in a compressed file format via Figshare at https://
+doi.org/10.6084/m9.figshare.c.4351631.v1 [63]. The database includes all raw calculation outputs,
+scripts utilized for database construction, and pre-processed data presented in comma-separated values
+(CSV) format.
+3.3. MultiXC-QM9
+The MultiXC-QM9 data set [22] significantly expands upon the well-established QM9 data set for studying
+small molecules. While QM9 focuses on a single functional (B3LYP) and basis set, MultiXC-QM9 offers a
+richer resource, encompassing 76 different DFT functionals alongside three basis sets and a complementary
+semi-empirical method (GFN2-xTB) [64]. Beyond molecular energies, MultiXC-QM9 provides energies for
+all possible monomolecular interconversions (AB type) within the QM9 data set, calculated using the
+same methodology as the molecular energies. Additionally, the data set includes information on bond
+changes associated with these 162 million reactions.
+This multifaceted nature makes MultiXC-QM9 useful for delta learning, transfer learning and multitask
+learning. The presence of data from both high and low fidelity methods enables models to learn the
+relationships between these methods and improve prediction accuracy.
+Computational methodology: The MultiXC-QM9 data set was constructed using xyz molecular geometries
+obtained from the QM9-G4MP2 data set [63]. Molecular energies were computed using the ADF package
+[65], which implements various post-self-consistent field (SCF) methods for different functionals.
+Specifically, the PBE functional [66] was employed for generalized gradient approximation (GGA) level
+energy calculations, with SZ, DZP, and TZP basis sets; these calculations were performed for 133 k molecules.
+Additionally, single-point energies were computed using the GFN2-xTB semi-empirical method.
+For the DFT calculations, the default SCF convergence criteria of the ADF software package were utilized,
+set to 1 · 10-6 hartree. Similarly, the SCF convergence for the GFN2-xTB calculations was set to the default
+value of 1 · 10-6 hartree.
+In the calculation of reaction energies, all possible `AB type' isodesmic reactions were identified among
+the QM9 molecules, and their corresponding indices were saved in a separate CSV file named `reactions.csv'.
+Subsequently, the energy changes associated with each reaction were computed using the same level of theory
+as for the energy calculations of individual molecules and stored in additional CSV files.
+Data accessibility: The MultiXC-QM9 data set is available on Figshare platform at https://doi.org/10.11583/
+DTU.c.6185986.v3[67] and provides information on both molecules and reactions in separate files. Energy
+calculations for molecules are provided in CSV and SQLite formats. CSV format contains energies from
+various DFT and semi-empirical methods, SMILES strings derived from xyz files, and chemical formulas for
+each molecule. The SQLite format stores xyz coordinates, energies, and other relevant properties derived
+automatically by atomistic simulation environment. Reaction data is provided in CSV format which includes
+reaction energies, indices of reactants and products, and SMILES strings for both reactants and products.
+3.4. revQM9
+The revQM9 data set [42] is the revision of the QM9 data set with the quantum chemical properties
+recalculated at the aPBE0 level (which is PBE0 method reformulation with the ratio of exact exchange
+determined by an ML model to approximate the CCSD(T)-level energies).
+Computational methodology: The data set is the revision of the QM9 data set with the properties of ca. 130k
+equilibrium geometries (with up to 9 non-hydrogen atoms) calculated at a more accurate aPBE0 level with
+the cc-pVTZ basis set. PySCF 2.4.0 [68­70] was used to perform simulations, while the adaptive parameters
+were supplied to it by a machine learning model trained on so that aPBE targets the CCSD(T)/cc-pVTZ
+atomization energies. The code to make predictions with aPBE0 is available on GitHub [71]. The properties
+calculated at aPBE/cc-pVTZ include total and atomization energies, orbital energies, dipole moments, and
+density matrices.
+Data accessibility: The revQM9 data set is available at https://zenodo.org/doi/10.5281/zenodo.10689883 [72].
+The data are provided in the npz format and sample script shows how to extract the required properties from
+the corresponding revQM9.npz data file.
+8
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+3.5. AIMEl-DB
+AIMEl-DB [5] provides atomic properties based on electronic density for 44k molecules randomly extracted
+from QM9 dataset [60], facilitating the development of ML models for direct reactivity and spectral
+prediction.
+Computational methodology: Initial 44 k structures (CHNO only) are extracted from QM9 with up to 9
+atoms and single-point calculations are performed at B3LYP/6-31G(2df,p) level of theory with Gaussian 16.
+Atomic properties are generated using AIMAll package [73].
+Data accessibility: The dataset is publicly available at Zenodo https://zenodo.org/records/11406726. More
+than 30 atomic properties including energy, dipole moment, quadrupole moment and population are
+provided as well as molecular properties stored in Gaussian output files [74].
+3.6. QM7-X
+QM7-X [33] is a comprehensive data set of 4.2 million structures of small organic molecules containing up
+to seven non-hydrogen atoms (C, N, O, S, C). It includes a systematic sampling of all stable equilibrium
+structures (constitutional/structural isomers and stereoisomers) and explores 100 non-equilibrium
+structures for each molecule. Each structure in QM7-X is accompanied by a rich set of 42 properties,
+meticulously calculated using PBE0+MBD [75, 76] level theory. These properties range from fundamental
+aspects like atomization energies and dipole moments to response characteristics like polarizability and
+dispersion coefficients.
+Computational methodology: To generate QM7-X data set, researchers first used the GDB13 database [77] to
+identify all possible structures (constitutional/structural isomers and stereoisomers) for molecules with up to
+seven non-hydrogen atoms. Using SMILES strings, initial 3D structures were obtained using MMFF94 force
+field [78] followed by conformational isomer search using Confab [79] to generate various conformers for
+each molecule. All structures were re-optimized at DFTB3+MBD level theory [75, 76]. The lowest-energy
+structure was selected as the first conformer, and additional structures with RMSD (root mean square
+deviation) larger than 1.0 Å from existing conformers were included.
+In the case of non-equilibrium structures, 100 non-equilibrium structures were created for each
+equilibrium structure. It was accomplished by displacing the equilibrium structures along linear
+combinations of normal mode coordinates computed at the DFTB3+MBD level within the harmonic
+approximation. It was ensured that the generated structures follow a Boltzmann distribution with a specific
+average energy difference from the corresponding equilibrium structure.
+This process resulted in about 4.2 million equilibrium and non-equilibrium structures forming the
+QM7-X data set. Physicochemical properties were calculated on the generated structures using PBE0+MBD
+level of theory with the FHI-aims code [80]. Tight settings were used for basis functions and integration
+grids. Various properties were calculated including energies, forces, atomic charges, dipole moments,
+polarizabilities, and more.
+Data accessibility: The QM7-X data set is available in eight HDF5 files on Zenodo at https://doi.org/10.5281/
+zenodo.4288677 [81]. Each file stores information about molecular structures using Python dictionaries.
+These dictionaries contain various properties for each molecule like atomic numbers, positions
+(coordinates), and other physicochemical properties.
+3.7. QM7
+Curated from the much larger GDB-13 database [77] containing nearly 1 billion molecules, QM7 focuses on
+a subset of 7165 small organic molecules [32]. These molecules contain up to 23 atoms, with a maximum of
+7 being `heavy atoms' ­ C, N, O, and S. The remaining positions are filled with hydrogen atoms. The data set
+provides Coulumb matrices, atomization energies, atomic charge and the Cartesian coordinates of each atom
+in the molecules.
+Computational methodology: The researchers selected a subset of 7165 molecules from GDB-13 with
+atomization energies ranging from 800 to 2000 kcal mol-1. This subset encompasses molecules with features
+like double and triple bonds, cycles, and various functional groups including carboxy, cyanide, amide,
+alcohol, and epoxy groups. In addition, only constitutional isomers (molecules with different chemical bond
+arrangements) were included and conformational isomers were excluded. For calculations, researchers first
+used Open Babel software [82] to generate 3D structures for each molecule from the subset. Next, they
+9
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+employed DFT calculations with PBE functional/tier2 basis set implemented in the FHI-aims code to
+calculate the atomization energy for each molecule.
+Data accessibility: The entire data set is hosted publicly on Quantum-Machine.org [83] with data organized
+into several multidimensional arrays. It provides Coulomb matrices, atomization energies, atomic charge
+and the Cartesian coordinates of each atom in the molecules.
+3.8. QM7b
+The QM7b data set [34] is a collection of information on over 7211 small organic molecules containing up to
+seven different elements: C, Cl, H, N, O, and S. It serves as an extension of the QM7 data set specifically
+designed for multitask learning applications in chemistry. Each molecule is described by 14 properties,
+including atomization energy, static polarizability, frontier orbital eigenvalues (HOMO and LUMO) and
+excitation energies.
+Computational methodology: The creation of QM7b data set starts from the selection of 7211 small organic
+molecules from GDB-13 database. Initial molecular geometries were generated from SMILES strings [84]
+using the universal Force Field (UFF) [85] within the Open Babel software. Subsequent geometry
+optimization was performed using the PBE approximation to Kohn­Sham DFT within the FHI-aims code.
+For molecular electronic properties, the PBE0 DFT [75] was employed to calculate atomization energies and
+frontier orbital eigenvalues for each molecule. The ZINDO approach [53] was used to determine properties
+like electron affinity, ionization potential, excitation energies, and maximal absorption intensity. The GW
+approximation [86] was utilized to evaluate the frontier orbital eigenvalues. For static polarizability
+calculations, both self-consistent screening (SCS) [76] and PBE0 were used. Software-wise, FHI-aims was
+used for SCS, PBE0, and GW calculations, while ORCA code [87] handled ZINDO/s calculations.
+Data accessibility: The complete QM7b data set is available as supplementary material [88] in [34]. It consists
+of two key files: coulomb.txt which contains unsorted Coulomb matrices (in atomic units) for all 7211
+molecules while properties.txt stores the 14 properties associated with each molecule.
+3.9. QM8
+The QM8 data set, introduced by Ramakrishnan et al [35], comprises electronic spectra data for
+approximately 21 786 small organic molecules. It is a carefully curated subset derived from the larger QM9
+data set, which includes 134 000 molecules. QM8 offers information on electronic spectra, specifically at the
+level of time-dependent DFT (TD-DFT) and second-order approximate Coupled Cluster (CC2), presenting
+the lowest two singlet transition energies and their corresponding oscillator strengths.
+Computational methodology: QM8 originates from the QM9 data set, containing 134 000 molecules with up
+to nine heavy atoms. Initially, molecules with high steric strain in their initial geometries, computed using
+the B3LYP/6-31G(2df,p) method, were eliminated. Subsequently, the data set was narrowed down to
+molecules containing a maximum of eight heavy atoms (carbon, nitrogen, oxygen, and sulfur), resulting in
+approximately 21 800 molecules. The geometries for these molecules were assumed to be relaxed, as per the
+original QM9 data set. Single-point calculations were performed with the TURBOMOLE program [89] to
+determine ground (S0
+) and the lowest two singlet excited states (S1
+and S2
+). The used methods include
+long-range corrected TD-DFT (LR-TDDFT) [90] with PBE0 and CAM-B3LYP functionals [91], and
+different basis sets (def2-SVP and def2-TZVP) [92], as well as the resolution-of-identity approximate
+coupled cluster with singles and doubles substitution (RI-CC2) method [93] with the def2-TZVP basis set
+[92]. A total of 14 `exotic' molecules were excluded due to convergence issues (7 molecules) or negative
+lowest transition energy, potentially attributed to orbital relaxation.
+Data accessibility: The QM8 data set is accessible as a supplementary text file in [35]. It provides indices for
+all molecules, facilitating the retrieval of their geometries from the QM9 data set, along with TD-DFT and
+CC2 excitation energies.
+3.10. Alchemy
+The Alchemy data set [6] contains 12 quantum mechanical properties for 119 487 organic molecules with up
+to 14 heavy atoms, sampled from the GDB-17 database [52]. Quantum mechanical calculations were
+performed using DFT (B3LYP/6-31G(2df,p)) via PySCF, providing data on molecular geometries, electronic,
+and thermochemical properties.
+10
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Computational methodology: The generation of molecular data in Alchemy was carried out using the PySCF.
+The quantum mechanical properties were calculated using DFT with the B3LYP functional and the
+6-31G(2df,p) basis set. These calculations encompassed ground state equilibrium geometries, electronic
+properties, and thermochemical properties.
+To ensure the reliability of molecular geometries, a structured three-stage optimization process was
+employed. Initial geometries were generated from SMILES strings using the MMFF94 force field, followed by
+HF optimization with the STO-3G basis set. The final relaxation step utilized B3LYP/6-31G(2df,p) to achieve
+accurate equilibrium geometries. Additional methods, such as meta-Lowdin population analysis, were
+employed to compute atomic charges, ensuring the transferability of these values across different molecular
+environments.
+In total, the data generation required about 3000 000 CPU hours, reflecting the computational
+complexity involved in calculating the properties of nearly 120 000 molecules. The dataset is provided in the
+SD file format to include detailed bond information.
+Data accessibility: The Alchemy data set is available at https://github.com/tencent-alchemy/Alchemy [94].
+3.11. QM1B
+QM1B, introduced by Mathiasen et al [31], is a colossal data set comprising one billion training examples
+tailored for ML applications in quantum chemistry. It encompasses molecules featuring 9­11 heavy atoms
+and includes properties such as energy and HOMO­LUMO gap.
+Computational methodology: The creation of the QM1B data set commenced with 1.09 million SMILES
+strings sourced from the GDB-11 database [95, 96], focusing on molecules with 9­11 heavy atoms.
+Subsequently, hydrogen atoms were added to these molecules using RDKit [97]. Each molecule underwent
+the generation of up to 1000 conformers employing the ETKDG algorithm within RDKit. This process
+yielded a total of 305.8 million, 568.7 million, and 205.4 million conformers for molecules with 9, 10, and 11
+heavy atoms, respectively. Utilizing PySCFIPU
+, HOMO­LUMO energies were computed for the resulting one
+billion conformers. Notably, a trade-off was made between data set size and data quality (DFT accuracy) to
+achieve the extensive data set size. Consequently, the DFT calculations (B3LYP/STO-3G) employed in QM1B
+may exhibit less accuracy compared to other data sets such as QM9 and PC9.
+Data accessibility: The QM1B data set is accessible on the GitHub platform at https://github.com/graphcore-
+research/qm1b-dataset [98]. However, it is important to highlight that QM1B is released solely for research
+purposes, and caution is advised for applications necessitating high accuracy. The creators encourage further
+exploration into the implications of reduced DFT accuracy in downstream tasks.
+3.12. SPICE
+The SPICE data set [43, 44], an acronym for Small-molecule/Protein Interaction Chemical Energies, focuses
+on the energetic interplay between drug-like small molecules and proteins. It is an essential resource for
+training models that can accurately predict forces and energies across a diverse array of molecules and
+conformations commonly encountered in drug discovery simulations.
+The initial version of SPICE featured over 1.1 million molecular conformations, covering a wide chemical
+space that included drug molecules, dipeptides, and solvated amino acids. It encompassed 15 different
+elements, spanned both charged and uncharged states, and included a range of high and low energy
+conformations, capturing a broad spectrum of covalent and non-covalent interactions.
+The updated version [44] enhances this data set by adding over 20 000 new molecules, improving the
+sampling of non-covalent interactions, and including a new subset of PubChem molecules containing boron
+and silicon, which were not present in the initial version. Additionally, several calculations from version 1
+have been corrected and incorporated into this latest release.
+Computational methodology: In the computation of energies and gradients (forces) for each conformation
+within the SPICE data set, Psi4 [99] serves as the primary tool. The calculations employ DFT with the
+B97M-D3(BJ) functional [100] and the def2-TZVPPD basis set [92]. Beyond forces and energies, SPICE
+also encompasses additional properties such as dipole and quadrupole moments, atomic charges, and bond
+orders.
+Data accessibility: The SPICE data set is readily accessible on Zenodo at https://doi.org/10.5281/zenodo.
+7338495, stored within a single HDF5 file named SPICE-1.1.2.hdf5 [101]. Additional details and scripts can
+be found on GitHub at https://github.com/openmm/spice-dataset.
+11
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+3.13. PubChemQC
+The PubChemQC database [28] is a valuable asset for computational chemistry research, especially in
+material development, drug design, and ML applications. It contains electronic structures for a vast number
+of molecules, including approximately 3 million molecules optimized using DFT at the B3LYP/6-31G level
+in ground states and over 2 million molecules with low-lying excited states calculated via TD-DFT at
+B3LYP/6-31+G.
+Computational methodology: The construction of the PubChemQC database involved several essential steps.
+Firstly, data acquisition was carried out by downloading public structure data files (SDFs) from the PubChem
+Project FTP website [102], each containing information like InChI, SMILES representations, and molecular
+weight for around 25 000 molecules. Data preprocessing followed, retaining only relevant data (CID, InChI,
+and weight) for the database and excluding molecules with missing CIDs, unsuitable structures (molecules
+with 5 bonds, ionic salts, water mixtures etc) or isotopic variations. All molecules were considered neutral.
+The next phase involved geometry optimization. Initial 3D structures were generated from InChI data
+using Open Babel and underwent a series of optimizations. This included an initial optimization with the
+PM3 method, further optimization with the HF method (STO-6G basis set), and final optimization with the
+B3LYP functional (VWN3) and 6-31G basis set. Subsequently, excited state calculations were performed
+using optimized geometries and Time-Dependent DFT (TDDFT) with the B3LYP functional and 6-31+G
+basis set.
+Data accessibility: Regarding data accessibility, the PubChemQC database was previously available at https://
+pubchemqc.riken.jp as reported in [28]. However, it has been temporarily moved to https://nakatamaho.
+riken.jp/pubchemqc.riken.jp/b3lyp_2017.html for continued access [103].
+3.14. PubChemQC PM6
+The PubChemQC PM6 data sets [29], stands as one of the most extensive compilations in its domain,
+encompassing PM6 data for a staggering 221 million molecules. These data sets are based on PubChem
+Compounds database [102], and provide optimized geometries, electronic structures, and other pivotal
+molecular properties. The data sets incorporate not only neutral states of molecules but also consider
+cationic, anionic, and spin-flipped states.
+Computational methodology: The construction of the PubChemQC PM6 data sets commenced with the
+comprehensive retrieval and parsing of the entire PubChem Compound database. Subsequently, key
+molecule attributes such as weight, InChI, SMILES, and formula were extracted, with exclusion criteria set
+for molecules exceeding 1000 g mol-1 in weight. Leveraging Open Babel, initial 3D structures were generated
+from SMILES encodings. Gaussian 09 software facilitated PM6 geometry optimization for each molecule,
+with subsequent calculations extending to cationic, anionic, and spin-flipped states. Rigorous validation
+ensured the fidelity of optimized InChI compared to the original counterparts.
+Data accessibility: The PubChemQC PM6 data sets, previously accessible at http://pubchemqc.riken.jp/
+pm6_datasets.html as referenced in [29], are now hosted at https://nakatamaho.riken.jp/pubchemqc.riken.
+jp/pm6_datasets.html for ongoing accessibility [104].
+3.15. PubChemQC B3LYP/6-31G//PM6
+The PubChemQC B3LYP/6-31G//PM6 data set [27] is a massive resource for researchers in chemistry,
+materials science, and drug discovery. It offers electronic properties for an astonishing 85 938 443 molecules
+(nearly 86 million), encompassing a broad spectrum of essential compounds and biomolecules with
+molecular weights up to 1000. This data set represents a significant portion (94%) of the PubChem
+Compound catalog as of 29, August 2016. For researchers with specific needs, the data is further divided into
+five sub-collections. These subsets focus on molecules containing particular elements (like CHON) and have
+molecular weight limitations (under 300 or 500).
+Computational methodology: As a first step in the workflow of data generation, molecules were extracted
+from the PubChemQC PM6 database [29], ensuring a diverse set of known molecules. Open Babel software
+was used to generate input files compatible with the GAMESS quantum chemistry program for the target
+molecules. For most elements, electronic properties were computed using B3LYP functional with the 6-31G
+basis set. For heavier elements, specific basis sets were employed, and effective core potentials were applied
+for certain metals. These calculations yielded various properties, including orbital energies, dipole moments,
+and more.
+12
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Data accessibility: The PubChemQC B3LYP/6-31G//PM6 data set is freely available for download at https://
+nakatamaho.riken.jp/pubchemqc.riken.jp/b3lyp_pm6_datasets.html under a Creative Commons license
+[105]. Researchers can access the data in three formats: GAMESS program input/output files, selected JSON
+output files and PostgreSQL database. This diverse range of formats allows researchers to choose the option
+that best suits their specific needs and computational tools.
+3.16. PC9
+The PC9 data set [26] serves as a valuable counterpart to the widely used QM9 data set. Unlike QM9's purely
+theoretical approach, PC9 leverages the PubChemQC project [28], a vast database of 3 million real-world
+molecules with calculated properties at the B3LYP/6-31G(d) level of theory.
+Computational methodology: To ensure compatibility with QM9, PC9 is restricted to molecules containing a
+maximum of 9 `heavy atoms' (excluding H) from the elements H, C, N, O, and F. After imposing the heavy
+atom limit, PC9 undergoes a process to eliminate duplicates stemming from factors like enantiomers,
+tautomers, isotopes, and potential artifacts within the PubChem database, which could result in
+identical-looking molecules. Consequently, PC9 ends up with 99 234 distinct molecules. This subset is
+divided into two groups: one consisting of molecules shared with QM9 (18 357 compounds) and the other
+comprising molecules unique to PubChemQC (80 877 compounds). Unlike QM9, which is confined to
+closed-shell neutral compounds, PC9 includes molecules with multiplicities exceeding 1. Furthermore, due
+to variations in calculation methods, PC9 only provides the total energies without zero-point vibrational
+energies, unlike QM9 which provides much broader coverage of different energies.
+Data accessibility: The PC9 data set is readily accessible on Figshare and Zenodo [106, 107]. where it provides
+ground state and orbital properties at the B3LYP/6-31G level of theory.
+3.17. bigQM7
+The bigQM7 [9] data set is a valuable resource for researchers focused on developing ML models to predict
+electronic spectra of molecules. This data set includes ground-state properties and electronic spectra for over
+12 880 molecules, offering a broader range of structures compared to previous data sets like QM7 [77] and
+QM9 [1]. Notably, bigQM7 emphasizes electronic excitations and provides data across various theoretical
+levels.
+Computational methodology: The creation of bigQM7 involved a detailed, multi-step process. Initially,
+SMILES strings for all molecules were extracted from the GDB-11 data set [95, 96]. These SMILES strings
+were then converted into initial structures using the UFF [85]. Geometry optimization was performed using
+a three-tier connectivity preserving geometry optimizations (ConnGO) workflow [108], ensuring
+structurally sound geometries and mitigating rearrangement issues during high-throughput calculations.
+Tight convergence criteria and basis sets def2-SVP and def2-TZVP [92] were employed for B97X-D [109]
+DFT optimizations. For excited state calculations, various methods were used: ZINDO calculations were
+performed at PM6 minimum energy geometries, and TDDFT calculations were carried out with 3-21G,
+def2-SVP, def2-TZVP, and def2-SVPD basis sets. Harmonic frequency analysis confirmed local minima for
+optimized geometries. Three molecules failing the ConnGO connectivity test were excluded due to a
+substructure prone to dissociation. All calculations were executed using the Gaussian suite of programs.
+Data accessibility: The bigQM7 data set offers multiple access points to facilitate exploration and utilization
+by researchers. The core data, encompassing structures, ground state properties, and electronic spectra, is
+conveniently available for download at https://moldis-group.github.io/bigQM7w/. For deeper analysis, the
+NOMAD repository at https://dx.doi.org/10.17172/NOMAD/2021.09.30-1 provides the input and output
+files from the corresponding calculations. Additionally, a data-mining platform is available at https://moldis.
+tifrh.res.in/index.html [110].
+3.18. QMug
+The QMugs (Quantum-Mechanical Properties of Drug-like Molecules) data set [41] provides a rich resource
+for researchers in drug discovery and computational chemistry. This collection curates over 665 000
+molecules relevant to biology and pharmacology, extracted from the ChEMBL database [111]. Notably,
+QMugs incorporates QM properties computed using a combination of methods, specifically leveraging both
+semi-empirical and DFT approaches.
+Computational methodology: The construction of the QMugs data set involved a multi-step process designed
+to capture a comprehensive picture of drug-like molecules at both the structural and QM level. The first step
+13
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+focused on data extraction and SMILES processing where molecules were selected from ChEMBL database
+[111] based on specific criteria, including having well-defined single-protein targets and associated activity
+information. This ensures the molecules hold potential relevance for drug discovery. Following extraction,
+the data underwent a series of cleaning steps. Molecules were neutralized to remove charged states, and
+extraneous components like salts and solvents were eliminated. Additionally, outlier removal techniques
+filtered out fragments, molecules with extreme atom counts (outside the range of 3­100 heavy atoms), and
+those with unaddressed radical species or persistent net charges.
+The second step addressed conformer generation and optimization where researchers employed a
+semi-empirical method called GFN2-xTB [112, 113] to generate three conformations for each drug-like
+molecule. Further refinement was achieved through minimization using a force field and meta-dynamics
+simulations. Finally, the conformations were clustered, and the lowest-energy structure from each cluster was
+chosen for further calculations. This approach ensured the inclusion of representative conformers for each
+molecule while maintaining computational efficiency.
+The final step involved higher-level quantum chemical calculations. The optimized geometries obtained
+in the previous step served as the basis for single-point electronic structure calculations. Here, the researchers
+employed DFT with the B97X-D functional and def2-SVP basis set [92] calculating a wider range of
+properties compared to the semi-empirical method used for conformer generation. The calculated properties
+include formation energies, dipole moments, and crucially, wave functions.
+Data accessibility: The data set is hosted on the ETH Library Collection service and can be downloaded at
+https://doi.org/10.3929/ethz-b-000482129 [114]. The data is provided in multiple formats: (1) a
+summary.csv file containing computed molecular properties and annotations; (2) compressed tarball files
+containing molecule structures (SDFs) with embedded properties, grouped by ChEMBL identifiers and (3)
+separate compressed tarball files for vibrational spectra and wave function data.
+3.19. OrbNet Denali
+The OrbNet Denali dataset [25] is a comprehensive training collection used to develop OrbNet Denali, a
+ML-enhanced semiempirical method for electronic structure calculations. It includes over 2.3 million
+molecular geometries with corresponding energy labels calculated at the DFT and semi-empirical levels.
+Based on ChEMBL27 database [115], it covers a wide range of organic molecules, including various
+protonation states, tautomers, non-covalent interactions, and common salts. The dataset features key
+elements (H, Li, B, C, N, O, F, Na, Mg, Si, P, S, Cl, K, Ca, Br, I) essential to biological and organic systems.
+Computational methodology: The OrbNet Denali data set is meticulously constructed to provide a broad
+chemical landscape relevant to both biological and organic chemistry. Initially, the ChEMBL27 database
+serves as a primary source, offering a wealth of chemical structures focused on SMILES strings containing
+elements frequently found in biomolecules (C, O, N, F, S, Cl, Br, I, P, Si, B, Na, K, Li, Ca, Mg). To maintain
+manageable complexity, the data set limits molecule sizes to 50 atoms. Strings corresponding to open-shell
+Lewis structures or those present in a separate validation set (Hutchison conformer benchmark [116]) are
+excluded, resulting in a random selection of over 116 943 unique SMILES strings for neutral molecules.
+To capture molecular flexibility, multiple conformations (up to four) are generated for each SMILES
+string using the ENTOS BREEZE conformer generator, with subsequent optimization at the GFN1-xTB level
+of theory [112]. Beyond equilibrium geometries, the data set includes non-equilibrium configurations to
+represent the dynamic nature of molecules. Two techniques are employed: normal-mode sampling [7], which
+simulates thermal fluctuations at 300 K, and ab initio molecular dynamics (AIMD) simulations, which mimic
+real-time dynamics at a higher temperature (500 K). Both methods utilize the GFN1-xTB approach, with the
+choice between them randomized for each molecule. This methodology yields a substantial collection of over
+1 771 191 equilibrium and non-equilibrium geometries derived from ChEMBL conformers.
+The data set also extends beyond neutral molecules. It includes protonation states and tautomers (over
+215 000 geometries) to capture various hydrogen attachment possibilities, with contributions from the
+QM7b data set enriching this aspect. Additionally, salt complexes (over 271 000 geometries) are generated by
+pairing ChEMBL molecules with common salts, and structures from other databases (JSCH2005, [117]
+BioFragment Database [118]) are included to represent a broader range of non-covalent interactions crucial
+in biological systems. Furthermore, to avoid bias towards large molecules, the data set includes a diverse
+collection of small molecules (over 94 000 geometries) created using common chemical motifs and further
+diversified by substituting atoms.
+Data accessibility: The OrbNet Denali training set, comprising 2.3 million geometries and corresponding
+energy labels, is openly accessible on FigShare at https://doi.org/10.6084/m9.figshare.14883867 [119].
+14
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+3.20. MD17 and its later versions
+The MD17 and its later versions [18­20] serve as foundational resources for researchers benchmarking the
+accuracy of force fields in molecular dynamics (MD) simulations. The two versions (the 1st version (MD17)
+[18] and the revised version (rMD17) [19]) both offer a collection of MD snapshots with DFT energies and
+forces for ten small organic molecules, including benzene, ethanol, malonaldehyde, uracil, toluene, salicylic
+acid, paracetamol, naphthalene, azobenzene, and aspirin. The 3rd version of the data set contains fewer
+molecules computed at the coupled cluster level of theory (CCSD(T)) [20].
+Computational methodology: The original MD17 data set contains energy and force calculations derived from
+AIMD simulations of gas-phase molecules at room temperature. The electronic potential energies in this
+data set were obtained using Kohn­Sham DFT. However, the data set faced several limitations, such as
+significant numerical noise that compromised data reliability. Furthermore, the original publication lacked
+comprehensive details on the functional, basis set, spin-polarization, integration grid, and software used,
+impeding reproducibility and limiting its utility in specific chemical simulations.
+To rectify these shortcomings, the revised MD17 (rMD17) data set was developed. This version includes
+the same ten molecules but features recalculated energies and forces using the PBE functional with the
+def2-SVP basis set [92, 120]. The rMD17 data set also implements stringent convergence criteria and a dense
+integration grid, enhancing accuracy.
+The coupled cluster data set was created using the same geometries as those in the DFT calculations.
+Energies and forces were recomputed employing all-electron CCSD(T). The Dunning's
+correlation-consistent basis set cc-pVTZ was utilized for ethanol, cc-pVDZ for toluene and malonaldehyde,
+and CCSD/cc-pVDZ for aspirin. All calculations were executed with the Psi4 software suite [99].
+Data accessibility: All data sets are available at www.sgdml.org/#data sets [121]. The rMD17 data set can also
+be accessible on Figshare at https://dx.doi.org/10.6084/m9.figshare.12672038 [122]. In addition, all data sets
+are provided as a class in the PYG library [123].
+3.21. xxMD
+Sampling in conventional MD data sets like MD17 and rMD17 is often biased towards a narrow region of the
+potential energy surface (PES), primarily focusing on equilibrium structures. This limited exploration
+restricts the ability of neural force fields (NFFs) to accurately model chemical reactions involving significant
+molecular deformations, such as bond breaking. To address these limitations, Pengmei et al [51] introduced
+the extended excited-state molecular dynamics (xxMD) data set. Similar to MD17, xxMD targets small to
+medium-sized gas-phase molecules but includes nonadiabatic trajectories to capture the dynamics of excited
+electronic states. This approach allows xxMD to encompass a broader range of nuclear configurations,
+including those essential for chemical reactions, such as transition states and products. Additionally, xxMD
+covers regions near conical intersections, which are critical for determining reaction pathways across
+different electronic states.
+Computational methodology: The xxMD data set includes four photochemically active molecular systems:
+azobenzene, malonaldehyde, stilbene, and dithiophene. To investigate the complex electronic structures
+involved in these systems, particularly in the vicinity of deformed geometries and conical intersections,
+nonadiabatic simulations were performed using the trajectory surface hopping algorithm implemented in
+the SHARC code [124]. The state-averaged complete active space self-consistent field (SA-CASSCF) level of
+theory [125] was employed to accurately describe the potential energy surfaces of the multiple electronic
+states relevant to these systems. This subset of data, generated from SA-CASSCF calculations, is referred to as
+xxMD-CASSCF. The trajectories in xxMD-CASSCF exhibit energy conservation and provide potential
+energies and forces for the first three electronic states. All SA-CASSCF calculations were carried out using
+OpenMolcas 22.06 [126].
+To ensure compatibility with existing data sets (MD17 and rMD17), a new subset xxMD-DFT is created
+which provides recomputed ground singlet electronic state potential energies and gradients using
+spin-polarized KS-DFT calculations with the M06 functional [127] for the same geometries as used in
+SA-CASSCF calculations. All calculations are done with the Psi4 package interfaced with ASE package [128].
+It should be noted that the xxMD data set does not include nonadiabatic coupling vectors (NACs) for
+reasons described in their reference data descriptor.
+Data accessibility: xxMD-CASSCF and xxMD-DFT both data sets are publicly available for download on
+GitHub at https://github.com/zpengmei/xxMD and Zenodo at https://doi.org/10.5281/zenodo.10393859
+[129]. The data is stored in compressed archives containing pre-split extended XYZ format files based on
+15
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+temporal information. These files are processed using the atomic simulation environment (ASE) software
+package.
+3.22. MD22
+The MD22 data set [21] is a comprehensive benchmark collection featuring molecules ranging from a small
+peptide with 42 atoms to a double-walled nanotube with 370 atoms. It comprises MD trajectories for seven
+systems spanning four major classes of biomolecules and supramolecular structures.
+Computational methodology: All calculations were performed using the FHI-aims electronic structure
+software [80], in conjunction with i-PI for the MD simulations. The potential energy and atomic force labels
+were determined at the PBE+MBD level of theory [75, 76]. Two different types of basis sets were employed,
+referred to as `light' and `tight' within the FHI-aims framework. Trajectories were sampled at a resolution of
+1 femtosecond (fs), with a thermostat used to regulate the temperature during simulations.
+Data accessibility: The MD22 data set is freely available for download at www.sgdml.org/#data sets [130].
+3.23. WS22
+WS22 [50] is a comprehensive database focusing on ten organic molecules, varying in size and complexity,
+with up to 22 atoms. It includes 1.18 million geometries, encompassing both equilibrium and
+non-equilibrium states. These geometries are meticulously sampled from specific distributions and further
+augmented with interpolated structures, resulting in a highly diverse data set. For each geometry, WS22
+provides various QM properties, such as potential energies, forces, dipole moments, and electronic energies.
+Computational methodology: The construction of the WS22 database involves a meticulous four-step process.
+In the first step, researchers employed DFT to determine the equilibrium geometries for various
+conformations of each molecule. Calculations were conducted for both ground and excited electronic states
+(where applicable) to capture a broad range of configurations. All geometry optimizations were performed
+without symmetry constraints using the Gaussian 09 program with the hybrid density functional PBE0 and
+the 6-311G basis set [57]. For certain molecules, particularly those experiencing significant conformational
+changes upon excitation, first excited state (S1
+) calculations were performed. In these cases, the
+linear-response time-dependent DFT approach was used for both geometry optimizations and frequency
+calculations at the same theoretical level, PBE0/6-311G. Frequency calculations were then carried out to
+ensure that the optimized structures were true minima on the potential energy surface.
+Beyond the initial equilibrium structures, the researchers implemented two techniques to create a diverse
+set of geometries. The first technique, Wigner sampling, considers the zero-point energy of molecules to
+generate a broader range of configurations compared to classical simulations [131]. This method uses the
+optimized geometries and harmonic frequencies obtained in step one to create an ensemble of
+non-equilibrium structures based on a Wigner probability distribution. For each molecule, 100 000
+geometries were generated, ensuring a good distribution across different conformers.
+To further explore beyond the vibrational degrees of freedom covered by Wigner sampling, researchers
+performed geodesic interpolation [132] between every possible combination of stable conformers. This
+creates a smooth transition between different conformational spaces, including regions near transition states
+on the potential energy surface, which are not accessible via Wigner sampling. This technique added an
+additional 20 000 geometries per data set in the WS22 database.
+In the final step, researchers conducted electronic structure calculations for all generated geometries,
+totaling 1.18 million calculations. This step assigns quantum chemical properties to each geometry in the
+database, including potential energies, atomic forces, dipole moments, and other relevant characteristics.
+Data accessibility: The WS22 database is publicly available on Zenodo at https://doi.org/10.5281/zenodo.
+7032334 [133]. Each molecule in the database has its own file, containing information on all generated
+geometries: Wigner sampled geometries, interpolated geometries, and minimum energy conformations
+obtained via geometry optimization.
+3.24. VIB5
+The VIB5 database [48] is a meticulously curated collection of high-quality ab initio quantum chemical data
+for five small polyatomic molecules with significant astrophysical relevance: methyl chloride (CH3
+Cl),
+methane (CH4
+), silane (SiH4
+), fluoromethane (CH3
+F), and sodium hydroxide (NaOH). The database
+includes over 300 000 grid points, with individual molecules featuring between 15 000 and 100 000 points.
+Each grid point corresponds to a specific nuclear configuration of the molecule, providing theoretical best
+estimates (TBEs) of potential energies and their constituent terms. Additionally, the data set offers energy and
+16
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+energy gradient calculations at various levels of theory, including MP2/cc-pVTZ and CCSD(T)/cc-pVQZ, as
+well as HF energies derived from these calculations using the corresponding basis sets.
+Computational methodology: The VIB5 database is built on a foundation of grid points that represent various
+nuclear configurations of the target molecules. These grid points were collected in VIB5 from the previous
+studies by some of the authors. Detailed descriptions of the grid point generation process can be found in the
+published VIB5 data descriptor [48] and authors' original publications.
+For each molecule, TBEs and energy corrections were sourced directly from previous studies by the
+authors. Each TBE is calculated as the sum of several constituent terms, such as coupled-cluster energy at the
+complete basis set limit, core-valence electron correlation energy correction, and diagonal
+Born­Oppenheimer correction. Not all constituent terms were calculated at the same level of theory across
+all molecules; specific details are provided in table 2 of the published VIB5 data descriptor. Various versions
+of MOLPRO and CFOUR programs [134­136] were utilized for these calculations.
+In addition to TBEs, the VIB5 database includes complementary results from calculations performed at
+two distinct levels of theory: MP2/cc-pVTZ and CCSD(T)/cc-pVQZ, using the CFOUR program package
+(Versions 1.0 and 2.1). These calculations were conducted with multiple options, including FROZEN_CORE
+= OFF (ON), SCF_CONV = 10, CC_CONV = 10, LINEQ_CONV = 8, and CC_PROG = ECC (VCC).
+From these calculations, HF energies were also extracted using the corresponding basis sets cc-pVTZ and
+cc-pVQZ. Additionally, for CH3
+Cl, MP2/aug-cc-pVQZ energies were included, calculated using
+MOLPRO2012.
+Data accessibility: The VIB5 data is stored in a JSON file named VIB5.json, which can be downloaded from
+https://doi.org/10.6084/m9.figshare.16903288 [137]. The file structure organizes the data by molecule,
+providing information on chemical formula, number of atoms, and more. Each grid point entry includes
+nuclear positions (both Cartesian and internal coordinates) and various property values. These property
+values include energies (TBE, constituent terms, HF, MP2, CCSD(T)) and energy gradients (MP2,
+CCSD(T)). Specific JSON keys allow access to different properties for each grid point, as detailed in table 3 of
+the original report.
+3.25. ANI-1
+The ANI-1 data set [7] provides a comprehensive collection of DFT total energy calculations of small organic
+molecules, encompassing approximately 20 million non-equilibrium conformations of 57 462 molecules.
+ANI-1 data set was used to train the general-purpose ANI-1 potential [138].
+Computational methodology: The creation of the ANI-1 data set involved a multi-step process including
+molecule selection, geometry optimization, and normal mode sampling. Initially, the GDB-11 database
+[95, 96] was used as the source, containing organic molecules with up to 11 heavy atoms (C, N, O, F). A
+subset of 57 947 molecules with 1­8 heavy atoms limited to C, N, and O was chosen. RDKit software was
+employed to generate 3D conformations, ensuring neutral charge and singlet electronic ground state.
+Next, each molecule underwent a pre-optimization using the MMFF94 force field [78]. This was followed
+by optimization at the B97X/6-31G(d) level of theory [56] using the Gaussian 09 package to identify energy
+minima. Molecules that failed to converge were excluded, accounting for 0.84% of the total data set.
+Subsequently, normal mode coordinates and corresponding force constants were obtained for each
+optimized molecule. Random displacements for each mode were calculated based on temperature, and these
+displacements were used to generate new conformations by scaling the normalized normal mode
+coordinates. Single-point energy calculations were performed at the B97X level for these new
+conformations. The number of conformations generated (N) depended on the number of heavy atoms (S)
+and the molecule's degrees of freedom (K).
+Data accessibility: The ANI-1 data set is stored in an HDF5 file accessible through Figshare at https://doi.org/
+10.6084/m9.figshare.5287732.v1. Additionally, a GitHub repository at https://github.com/isayev/
+ANI1_dataset provides usage details and data access instructions [139].
+3.26. ANI-1ccx and ANI-1x
+The ANI-1x and ANI-1ccx data sets [3] are foundational resources used to train the universal ANI-1x [140]
+and ANI-1ccx [141] ML potentials, respectively. These data sets provide an extensive collection of millions of
+organic molecule conformations containing the elements carbon, hydrogen, nitrogen, and oxygen (CHNO).
+The ANI-1x data set includes DFT calculations for approximately 5 million organic molecule conformations,
+obtained through an active learning algorithm. This data set features a much wider variety of molecular
+conformations compared to the ANI-1 random sampled data set, owing to the active learning methods
+17
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+employed in its construction. The ANI-1ccx data set is a carefully selected 10% subset of the ANI-1x data set,
+recomputed with CCSD(T)/CBS level of theory.
+Computational methodology: The ANI-1x data set was developed using an active learning procedure to
+enhance the diversity and accuracy of the ANI-1x potential. Initially, an ensemble of ANI models was trained
+using bootstrapping on a preliminary data set. Molecules were then randomly sampled from extensive
+databases like GDB-11 and ChEMBL [95, 96, 111]. Four sampling techniques were applied to these molecules
+within active learning: MD sampling, normal mode sampling, dimer sampling, and torsion sampling. Data
+points with high uncertainty, identified using the ensemble disagreement measure , were selected for DFT
+calculations. These high-uncertainty points were then added to the training set, and the models were
+retrained. This process was iteratively repeated to create a more diverse and comprehensive data set.
+The ANI-1ccx data set leverages a higher level of theory, CCSD(T)/CBS (special extrapolation scheme to
+CCSD(T)/complete basis set), for a subset of the ANI-1x data points. The selection process began with a
+random subset of ANI-1x data, for which CCSD(T)/CBS reference data was generated. An ensemble of
+models was trained on this CCSD(T)/CBS data, and  was calculated for all remaining ANI-1x data points.
+Data points with  values exceeding a predetermined threshold were then selected, and CCSD(T)/CBS data
+for these points was generated and added to the training set. This iterative process continued until the final
+ANI-1ccx data set was established.
+Data accessibility: The ANI-1x and ANI-1ccx data sets are available in a single HDF5 file, accessible via
+Figshare at https://doi.org/10.6084/m9.figshare.c.4712477 [142]. A Python script (example_loader.py)
+provided in a publicly accessible GitHub repository https://github.com/aiqm/ANI1x_data sets can be used to
+access the data. The data set includes various properties such as energies (multiple types), forces, electronic
+multipole moments, and charges. These properties were calculated using three primary electronic structure
+methods: B97X/6-31G [56], B97X/def2-TZVPP [92], and CCSD(T)/CBS. All B97X/6-31G
+calculations were performed using the Gaussian 09 electronic structure package, while B97X/def2-TZVPP
+and CCSD(T)/CBS calculations were conducted using the ORCA software package [143].
+3.27. ANI-2x
+The ANI-2x [8] data set is used to train the ANI-2x ML model and contains 8.9 million nonequilibrium
+neutral singlet molecules with seven chemical elements (H, C, N, O, S, F, Cl) compared to its predecessor
+ANI-1x [3] with compounds comprising only four elements (H, C, N, O), thus enabling wider ability on
+drug discovery and biomolecules. Different from previous ANI datasets, ANI-2x uses S66x8 data set [144] to
+improve non-bonded interactions and a new type of sampling to improve bulk water.
+Computational methodology: ANI-2x data set is based on GDB-11 [95, 96], ChEMBL [111], S66x8 [144] data
+sets, and additional randomly-generated amino acids and dipeptides to build the data sets. Similar active
+learning processes as previous ANI datasets are used to generate non-equilibrium geometries with
+refinement on torsion, non-bonded interaction, and bulk water. The obtained conformers are labeled with
+energies and forces at B97X/6-31Glevel of theory using Gaussian 09.
+Data accessibility: The ANI-2x data sets are available on Zenodo with guidelines on use and methods used for
+generation https://doi.org/10.5281/zenodo.10108942 [145]. Except for the target level B97X/6-31G used
+to train the ANI-2x potential, additional reference data at 4 DFT levels is provided.
+3.28. Transition1x
+The Transition1x data set [47] is a unique resource for researchers developing ML models that can handle
+reactive systems. Unlike existing data sets that primarily focus on near-equilibrium configurations,
+Transition1x incorporates crucial data from transition regions. This empowers ML models to learn features
+essential for accurate reaction barrier prediction. Furthermore, Transition1x serves as a new benchmark for
+evaluating how well ML models capture reaction dynamics.
+With 9.6 million data points, each meticulously generated using DFT calculations, Transition1x
+encompasses the forces and energies for a staggering 10 000 organic reactions. The core data generation
+method is the nudged elastic band (NEB) [146] technique which efficiently explores millions of
+configurations within transition state regions, providing a comprehensive picture of the energetic landscape
+during reactions.
+Computational methodology: The creation of Transition1x follows a meticulous workflow. First, a
+comprehensive database of reactant-product pairs for various organic reactions lays the foundation,
+providing initial geometries for reactants, products, and transition states [147]. To ensure compatibility with
+18
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+the popular ANI-1x data set [140], Transition1x utilizes the same B97X functional [148] and the 6-31G(d)
+basis set [56] for DFT calculations. These calculations are performed using the ORCA software [143].
+Next comes the NEB [146] and CINEB (an improvement of the NEB algorithm) [149] optimization
+stage. NEB, along with CINEB, plays a central role. Both techniques are employed alongside the BFGS
+optimizer to efficiently refine the initial guess for the minimum energy pathway (MEP). The workflow
+involves relaxing reactant and product geometries, constructing an initial path, minimizing its energy using
+image dependent pair potential (IDPP) [150] within the NEB framework, and finally using NEB and CINEB
+together to achieve an accurate MEP.
+To ensure high-quality data, filtering steps are crucial. Unphysical configurations and redundant data
+points are discarded. Reactions that fail to converge during NEB calculations are excluded, and only reaction
+paths that significantly differ from previously included ones are incorporated.
+Data accessibility: The Transition1x data set is readily available on Figshare at https://doi.org/10.6084/m9.
+figshare.19614657.v4 and stored in a single, user-friendly HDF5 file named `Transition1x.h5' [151].
+Dataloaders and example scripts are available at https://gitlab.com/matschreiner/T1x.
+3.29. QM-sym
+Symmetry plays a pivotal role in determining various molecular characteristics, such as excitation degeneracy
+and transition selection rules. Despite its significance, many quantum chemistry databases often overlook
+this crucial aspect. Bridging this gap, the QM-sym database [38] emerges as a valuable resource, meticulously
+documenting the Cnh
+symmetry for each molecule within its vast repository. Comprising 135 000 structures
+featuring elements like H, B, C, N, O, F, Cl, and Br, it encompasses symmetries like C2h
+, C3h
+, and C4h
+.
+Computational methodology: QM-sym employs a two-step process, leveraging symmetry to streamline
+database generation. Initially, it constructs fundamental molecular frameworks based on standardized bond
+lengths and angles. Subsequently, employing a genetic algorithm, these structures undergo iterative
+refinement to attain stable configurations while conforming to predefined symmetrical point groups (e.g.
+C2h
+or D6h
+).
+Following structural generation, each molecule is optimized at the B3LYP/6-31G(2df,p) level theory with
+Gaussian 09 software, which ensures chemical validity and stability. However, complexities may lead to
+convergence failures or unstable configurations. To mitigate this, a filtering mechanism akin to QM9 is
+enacted, setting a maximum optimization cycle limit of 200 and implementing stricter convergence criteria.
+Ultimately, only structures exhibiting successful optimization and positive vibrational frequencies, indicative
+of stability, are retained in the final QM-sym database, striking a balance between symmetry incorporation
+and molecular stability.
+Data accessibility: The QM-sym database is readily accessible through platforms like GitHub and Figshare
+using the links https://github.com/XI-Lab/QM-sym-database and https://doi.org/10.6084/m9.Figshare.
+9638093, respectively [152, 153]. It provides QM_sym.xyz files containing atomic coordinates and a plethora
+of predicted properties, encompassing point group information, enthalpies, atomization energies, zero-point
+energies, and energy and symmetry labels spanning from HOMO-5 to LUMO+5. Each structure is
+uniquely indexed by QM_sym_i.xyz, with `i' denoting the structure's database order.
+3.30. QM-symex
+While QM-sym focuses on larger, symmetrical organic molecules and incorporates vital symmetry
+information, it lacks crucial excited-state properties necessary for applications like photosensitizers and
+photodynamic therapy.
+To fill this gap, the team behind QM-sym introduced QM-symex [39], a database dedicated to
+excited-state information. In contrast to existing databases such as QM8 [35, 52], QM-symex offers detailed
+insights into critical parameters like oscillator strength, transition energy, and transition symmetry. With the
+new 38 k molecules, the distribution of symmetries within QM-symex is noteworthy. C2h
+symmetry occupies
+a significant proportion of 46%, while C3h
+and C4h
+symmetries account for 41% and 13%, respectively.
+Computational methodology: QM-symex inherits the rigorous data generation process established in
+QM-sym, ensuring the stability and symmetry of its molecules. Building upon the 135 000 structures from
+QM-sym, an additional 38 000 molecules were meticulously generated. Maintaining symmetry preservation
+and stability remains a core principle. Using Gaussian 09 optimization with 100 cycles, each molecule
+undergoes rigorous validation to retain its original symmetry throughout the process.
+19
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+Data accessibility: Accessible on Figshare at https://doi.org/10.6084/m9.Figshare.12815276 [154], QM-symex
+provides data in XYZ format, indexed as QM_symex_i.xyz for ease of access, where `i' represents the order of
+the structure in the database. In addition to inheriting all properties from QM-sym, QM-symex enriches the
+data set with information on the first ten singlet and triplet transitions. This includes details such as energy,
+wavelength, orbital symmetry, transition distance, and other quasi-molecular properties.
+3.31. 2DFT
+The 2DFT [23] data set provides a comprehensive collection of approximately 16 million conformers for
+around 2 million drug-like molecules, featuring 8 atom types (H, C, N, O, Cl, F, Br) and up to 62 atoms. It is
+an extension of the original DFT data set [155], offering energies, forces, and various other properties
+calculated at a reasonably accurate DFT level for a wide range of molecules. Additionally, the data set
+includes relaxation trajectories for numerous drug-like molecules. Based on the Molecular Sets (MOSES)
+data set [156], 2DFT contains around 1.93 million molecules with atoms C, N, S, O, F, Cl, Br, and H,
+448 854 unique Bemis-Murcko scaffolds [157], and 58 315 unique BRICS fragments [158].
+Computational methodology: The 2DFT data set employs a meticulous approach to generate a diverse set of
+conformations (1­100) for each molecule. Initially, the conformation generation method from the RDKit
+software suite was utilized.
+To avoid redundancy, a clustering step was implemented using the Butina clustering method [159],
+which groups similar conformations based on their geometrical properties. This step effectively reduced the
+number of conformations while ensuring a representative set is retained. Only clusters that encompassed at
+least 95% of the conformations for a specific molecule were kept. The most central conformation within each
+retained cluster, known as the centroid, was chosen as the representative conformation for that molecule in
+the final data set. The resulting data set contained 1­69 unique conformations per molecule, totaling over 12
+million conformations.
+For each conformation, electronic properties (energy, DFT Hamiltonian matrix, DFT overlap matrix,
+etc) were computed using the Kohn­Sham DFT method at the B97X-D/def2-SVP level of theory with the
+Psi4 quantum chemistry software. Additionally, interatomic forces were calculated at the same level of theory
+for about 452 000 molecules and 2.9 million conformations.
+Data accessibility: The associated code and links to access various splits of the 2DFT data set, are freely
+available for download at https://github.com/AIRI-Institute/nablaDFT.
+3.32. The COMPAS project
+The COMPAS (COMputational database of Polycylic Aromatic Systems) project aims at providing structures
+and properties for ground-state polycyclic aromatic systems. COMPAS-1 [12] focuses on cata-condensed
+polybenzenoid hydrocarbons (PBHS) with 43 k molecules, COMPAS-2 [13] provides 0.5 million
+cata-condensed poly(hetero)cyclic aromatic molecules and COMPAS-3 [14] explores 40 k the
+peri-condensed polybenzenoid hydrocarbons. All the 3 data sets contain molecules up to 11 rings with
+properties calculated at xTB level and molecules up to 10 rings at DFT level.
+Computational methodology: For COMPAS-1, the initial polycyclic molecules are constructed with CaGe
+[160] up to 11 rings. All the geometries were optimized at GFN2-xTB level and molecules containing up to
+10 rings were further optimized at B3LYP-D3(BJ)/def2-SVP with ORCA 4.2.0. COMPAS-2 starts from
+various building blocks different in size and elements contained with the final geometries optimized using
+GFN1-xTB and CAM-B3LYP-D3BJ/def2-SVP. COMPAS-3 follows the same protocol as
+COMPAS-1 and performs calculation on the obtained molecules at GFN2-xTB and
+CAM-B3LYP-D3BJ/aug-cc-pVDZ//CAM-B3LYP-D3BJ/def2-SVP level of theory.
+Data accessibility: COMPAS datasets are publicly available at https://gitlab.com/porannegroup/compas where
+molecules and their corresponding QM properties including electronic energies, HOMO/LUMO energies
+and gap, ZPE, etc are hosted. An online website is developed for easier structure search and download at
+https://compas.net.technion.ac.il/ [161].
+3.33. CREMP
+CREMP (Conformer-rotamer ensembles of macrocyclic peptides) data set [15] aims to explore macrocyclic
+peptides which is lacking in MLP field, providing 36 k representative 4-, 5-, and 6-mer homodetic cyclic
+peptides with up to 31.3 million unique conformers with properties calculated at semiempirical level.
+CREMP-CycPeptMPDB data set is also provided which is built based on the established CycPeptMPDB [162]
+20
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+database featuring passive membrane permeability with 8.7 million newly-generated conformers from 3 k 6-,
+7-, and 10-mer cyclic peptides.
+Computational methodology: To generate the CREMP data set, they utilized the CREST tool to explore diverse
+conformational ensembles of macrocyclic peptides. They began with a set of 36 198 unique homodetic
+macrocyclic peptides, sampled based on key parameters such as side chains, stereochemistry, and
+N-methylation. Using RDKit [97], each peptide was converted to canonical SMILES, and initial conformers
+were generated via the ETKDGv3 method [163], followed by energy optimization using the MMFF94 force
+field [78]. The 1000 lowest-energy conformers were further optimized using GFN2-xTB [64] in chloroform
+solvent. These optimized structures were then used as inputs for CREST simulations [164], where 14
+metadynamics runs were performed in parallel. The final ensembles were filtered to ensure chemical graph
+consistency across all conformers.
+Data accessibility: CREMP and CERMP-CycPeptMPDB data sets are available on Zenodo at https://doi.org/
+10.5281/zenodo.7931444 and https://doi.org/10.5281/zenodo.10798261 [165]. The provided data consists of
+CREST metadata including energies, entropies, etc and conformers with their 3D structures. CREPM also
+provides instructions of data usage on GitHub at https://github.com/Genentech/cremp.
+3.34. GEOM
+The GEOM (Geometric ensemble of molecules) data set [16] is a comprehensive resource containing
+high-quality conformers for 451 186 organic molecules. This includes 317 928 drug-like species with
+experimental data and 133 258 molecules from the QM9 data set [1]. The dataset encompasses 304 466
+molecules sourced from AICures (www.aicures.mit.edu), a machine learning challenge focused on drug
+repurposing for COVID-19 and related illnesses, as well as 16 865 molecules from the MoleculeNet
+benchmark [166], annotated with experimental properties relevant to physical chemistry, biophysics, and
+physiology.
+Computational methodology: The data generation process for the GEOM data set involved several key steps. It
+began with SMILES pre-processing, where SMILES strings were converted to their canonical forms using
+RDKit to ensure consistency across the dataset. For drug molecules found in clusters (e.g. with counter-ions
+or salts), de-salting procedures were applied to isolate the main compound and adjust its ionization state.
+This step ensured uniform molecular representation across multiple sources.
+In the initial structure generation phase, RDKit was used to generate molecular conformers, which were
+optimized using the MMFF force field. The ten lowest energy conformers were further optimized with
+GFN2-xTB, and the lowest energy conformer was selected as the starting structure for the CREST
+simulations [164]. For the QM9 dataset, molecules were re-optimized with xTB before undergoing CREST,
+despite already being optimized with DFT.
+The next step involved graph re-identification, which was crucial for handling changes in stereochemistry
+and reactivity during CREST simulations. RDKit was used to assign graph features to each conformer,
+ensuring accuracy in molecular structures. For 534 molecules from the BACE dataset, CENSO simulations
+[167] were performed to further refine conformers with DFT geometry optimizations.
+Finally, with ORCA version 5.0.2, single-point DFT calculations (with r2SCAN-3c functional, mTZVPP
+basis, C-PCM model of water, and default grid 2) were carried out on all CREST conformers from the BACE
+dataset to provide high-accuracy energies. Additionally, Hessian calculations were performed using xTB to
+obtain vibrational frequencies, providing valuable thermodynamic information.
+Data accessibility: The GEOM is online at https://github.com/learningmatter-mit/geom, where both source
+datasets and tutorials on loading and analyzing data are provided. Conformer-level information (geometry,
+energy, degeneracy, etc) and species-level information (experimental values, average conformer energy, etc)
+are included [168].
+3.35. tmQM
+The tmQM data set [46] explores transition metal-organic compound space including Werner, bioinorganic
+and organometallic complexes with their respective QM properties based on Cambridge structural database
+[169], enabling wide coverage of organometallic space. There are in total 86 665 complexes with 3d, 4d, and
+5d transition metals from groups 3 to 12. Lately, 60k graph data set (tmQMg) [170] and a 30 k ligand library
+(tmQMg-L) [171] are constructed with NBO analysis on tmQM dataset.
+tmQM offers Cartesian coordinates optimized at the GFN2-xTB level, along with quantum properties
+computed at the DFT (TPSSh-D3BJ/def2-SVP) level. These properties include electronic and dispersion
+21
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+energies, metal center natural charge, HOMO/LUMO energies and gaps, dipole moments, and
+polarizabilities calculated at the GFN2-xTB level.
+Computational methodology: The tmQM data set was generated by extracting structures from the 2020
+release of the Cambridge Structural Database (CSD) using seven filters: (1) inclusion of only mononuclear
+transition metal (TM) compounds, (2) containing at least one carbon and one hydrogen, (3) excluding
+non-metal components, (4) omitting polymeric structures, (5) ensuring 3D coordinates, (6) excluding
+disordered atoms, and (7) removing highly charged species (charge outside -1 to +1). From the filtered
+CSD data, 116 332 structures were selected. After geometry optimization using the GFN2-xTB method,
+additional filters for convergence, geometry quality, and electron count reduced the dataset to 86 699
+structures. Ultimately, quantum mechanical properties were computed using DFT with the hybrid
+meta-GGA TPSSh functional and the def2-SVP basis set through Gaussian 16.
+Data accessibility: The tmQM dataset and its derivatives are available at https://github.com/bbskjelstad/
+tmqm with usage information as well as timely updates. It is also part of the Quantum-Machine project and
+can be found at http://quantum-machine.org/datasets/.
+3.36. OFF-ON dataset
+The OFF-ON (organic fragments from organocatalysts that are non-modular) database [24] is developed to
+train machine learning models aimed at predicting the behavior of structurally and conformationally diverse
+functional organic molecules, particularly photoswitchable organocatalysts. This dataset contains 7869
+equilibrium geometries and 67 457 non-equilibrium geometries of organic compounds and dimers,
+providing a broad foundation for exploring flexible molecular structures and their free energy surfaces.
+Computational methodology: The data generation process for the OFF-ON database involved two key stages.
+The first stage concentrated on creating a set of molecules that represent diverse chemical environments
+pertinent to functional organic molecules. This set included catalytic moieties, photochromic units,
+substituted aromatic rings, and representations of non-covalent interactions. To compile this diverse set,
+existing molecular databases such as OSCAR, CSD, and PubChem [102] were utilized, alongside additional
+generation protocols detailed in the supplementary materials. As a result, a final collection of 7869 unique
+entries was established, encompassing 3533 catalytic moieties, 538 photochromic units, 3165 substituted
+rings, and 633 dimers representing non-covalent interactions.
+The second stage focused on generating a range of molecular conformations to capture
+out-of-equilibrium effects. This was achieved through molecular dynamics (MD) simulations, where for
+each of the 7869 structures, 5 ps MD trajectories were initiated from geometries optimized using DFTB.
+These simulations resulted in over 2 million new geometries. The dataset was subsequently refined using the
+farthest point sampling (FPS) algorithm, which selected the most diverse conformations from the MD
+trajectories. This process led to the inclusion of 67 457 unique out-of-equilibrium structures in the database.
+In total, the OFF-ON database comprises 75 326 structures, combining both equilibrium and
+non-equilibrium states. The computational details of the dataset include electronic structure computations
+and machine learning potential modeling. The baseline energy calculations were performed at the DFTB3
+level with the 3ob parameters and D3 dispersion correction, implemented in the DFTB+ software. These
+results were normalized using multilinear regression models. The reference energy was computed at the
+PBE0-D3/def2-SVP level using the TeraChem software, and the difference between DFTB and PBE0 energies
+was used as a correction.
+Data accessibility: The OFF-ON database is openly available at https://archive.materialscloud.org/record/
+2023.189 [172].
+3.37. Others
+In addition to the data sets and databases described above, this subsection introduces eight more data sets
+and databases: C7O2H10-17, [10] ISO17, [17], VQM24, [49], QCDGE [30], QM-22, [40] CheMFi [11],
+QM9S [37] and the TensorMol ChemSpider data set [45]. Among them, the C7O2H10-17 data set comprises
+MD trajectories for 113 randomly selected isomers of C7O2H10. These trajectories were calculated at a
+temperature of 500 K with a high temporal resolution of 0.5 fs, using DFT with the PBE
+exchange-correlation potential. Notably, C7O2H10 represents the largest set of isomers within the QM9 data
+set. The identifiers used in this data set are consistent with those used in the QM9 isomer subset, ensuring
+compatibility and ease of reference.
+The ISO17 data set extends the C7O2H10-17 data set, consisting of 129 isomers with the chemical
+formula C7
+O2
+H10
+. Each isomer includes 5000 conformational geometries, energies, and forces, sampled at a
+22
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+resolution of 1 femtosecond in the MD trajectories. These simulations were conducted using the FHI-aims
+software, employing DFT with the PBE functional and the Tkatchenko­Scheffler (TS) van der Waals
+correction method.
+The VQM24 data set is a comprehensive data set containing QM properties of small organic and
+inorganic molecules. It encompasses 258 242 unique constitutional isomers and 577 705 conformers of
+varying stoichiometries, focusing on molecules composed of up to five heavy atoms from C, N, O, F, Si, P, S,
+Cl, Br. For each molecule, the data set provides optimized structures, thermal properties (vibrational modes,
+frequencies), electronic properties, wavefunctions, and, for a subset of 10 793 conformers, diffusion
+quantum Monte Carlo (DMC) energies. Calculations were performed at the B97X-D3/cc-pVDZ level of
+theory, with conformers initially generated using GFN2-xTB and subsequently relaxed using DFT.
+Calculations were performed with the following computational programs: Surge [173], RDKit [97], CREST
+[164], Psi4 [99] and QMCPACK [174].
+The QCDGE database offers an extensive collection of ground and excited-state properties for 443 106
+organic molecules, each containing up to ten heavy atoms, including carbon, nitrogen, oxygen, and fluorine.
+These molecules are sourced from well-known databases such as QM9, PubChemQC, and GDB-11. The
+database provides 27 molecular properties, including ground-state energies, thermal properties, and
+transition electric dipole moments, among others. Ground-state geometry optimizations and frequency
+calculations for all compounds were carried out using the B3LYP/6-31G level of theory with D3(BJ)
+dispersion correction [175], while excited-state single-point calculations were performed at the
+B97X-D/6-31G level. All computational work was conducted using Gaussian 16.
+The QM-22 database is a compilation of molecular data sets specifically curated for DMC calculations of
+the zero-point state. Each data set within QM-22 employs unique methodologies tailored to the specific
+molecules involved. Detailed computational methods for each data set can be found in their corresponding
+publications [40].
+The CheMFi data set is a multifidelity compilation of quantum chemical properties derived from a subset
+of the WS22 database, featuring 135 000 geometries sampled from nine distinct molecules. CheMFi
+encompasses five different levels of fidelity, each corresponding to a specific basis set size (STO-3G, 3-21G,
+6-31G, def2-SVP, def2-TZVP). The data set was generated using TD-DFT calculations with the CAM-B3LYP
+functional, performed via the ORCA software package. It includes comprehensive data on properties such as
+vertical excitation energies, oscillator strengths, molecular dipole moments, and ground state energies.
+Moreover, computational times for each fidelity level are provided to facilitate benchmarking of multifidelity
+models.
+The QM9S dataset, used for training and testing the DetaNet deep learning model, consists of 133 885
+organic molecules derived from the QM9 dataset. The molecular geometries were re-optimized using the
+Gaussian 16 software at the B3LYP/def-TZVP level of theory. A wide range of molecular properties were then
+calculated at the same level, including scalar values (e.g. energy, partial charges), vectors (e.g. electric dipole),
+second-order tensors (e.g. Hessian matrix, quadrupole moment, polarizability), and third-order tensors (e.g.
+octupole moment, first hyperpolarizability). Additionally, frequency analysis and time-dependent DFT were
+performed to obtain the IR, Raman, and UV­Vis spectra.
+The TensorMol ChemSpider data set contains potential energies and forces for 3 million conformations
+from 15 000 different molecules composed of carbon, hydrogen, nitrogen, and oxygen. These molecules were
+sourced from the ChemSpider database [176]. The training geometries were sampled using metadynamics
+[177], and their energies were calculated using the QChem program [178] with the B97X-D
+exchange-correlation functional and a 6-311G basis set.
+Data accessibility: The C7O2H10-17 and ISO17 data sets are available at http://quantum-machine.org/
+datasets/, while the VQM24 data set can be accessed on Zenodo at https://doi.org/10.5281/zenodo.11164951.
+The QCDGE database is hosted at http://langroup.site/QCDGE/, and the QM22 database can be downloaded
+from https://github.com/jmbowma/QM-22. The CheMFi data set is available at https://github.com/SM4DA/
+CheMFi. The QM9S data set is hosted at Figsharehttps://doi.org/10.6084/m9.figshare.24235333. Although
+the TensorMol ChemSpider data set was once accessible via https://drive.google.com/drive/folders/
+1IfWPs7i5kfmErIRyuhGv95dSVtNFo0e_, as mentioned in the supplementary information, it is no longer
+available.
+4. Concluding remarks and future outlook
+The exploration of quantum chemical databases and data sets for ML potentials has revealed a rich landscape
+of resources offering valuable data for training and validating these powerful tools. We have identified a
+23
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+diverse range of data sets and databases, each with its own strengths in terms of information content, level of
+theory, molecular coverage, and creation procedures.
+As the number of quantum chemical data sets continues to grow rapidly, the importance of maintaining
+an up-to-date overview becomes critical. To this end, we provide an updatable resource (accessible at https://
+github.com/Arif-PhyChem/datasets_and_databases_4_MLPs), which aims to track and categorize emerging
+databases and data sets as they become available, ensuring researchers have access to the latest information.
+This resource also comes with the machine-readable representation of the overview of the data sets, which
+allows to easier sort and filter the data sets when required. The corresponding Jupyter notebook is also
+provided.
+However, the field faces significant challenges in ensuring the long-term accessibility of these data sets.
+Instances like the disappearance of the TensorMol database highlight the fragility of data availability over
+time. Platforms such as Figshare and Zenodo offer solutions to some extent, with Zenodo providing free
+hosting for large data sets, while Figshare's service comes with a fee for larger storage needs. Ensuring the
+longevity and accessibility of data sets will require continued support and development of such repositories.
+Moreover, data format standardization is another area requiring attention. The FAIR (Findable,
+Accessible, Interoperable, Reusable) principles provide a guiding framework [4], but the diversity of formats
+in use today makes unification challenging. Efforts to promote standard formats, such as ioChem-BD [179]
+and Quantum Chemistry Schema [180], could help streamline data exchange and enhance interoperability
+across different platforms and research groups. Attempts to provide standard formats interoperable between
+software are naturally undertaken in the big software ecosystems gluing together different quantum chemical
+and/or ML codes like is done in MLatom [181] and ASE [128].
+Another big issue with the growing number of data sets and databases is that they are often generated at
+different levels severely hampering their use in ML potentials as, e.g. training a ML potential on a merged
+data set would be very problematic if possible at all to achieve any reasonable result. One of the solutions is
+recalculating properties at the same level for the merged data sets but it is very computationally costly
+undertaking. Recently, some of us suggested a potentially simple solution to this problem by creating
+all-in-one machine learning potentials which take in input the level of theory as an additional feature: we
+showed that this approach allows to train a single, accurate ML model on a heterogeneous data at different
+levels of theory [182]. This seems to be one of the most promising direction for the future explorations
+which we also pursue in our labs.
+Furthermore, maintaining updatable data sets and databases, particularly for `living' (i.e. updatable)
+methods like UAIQM [183], is crucial for the continued evolution of ML potentials. Ensuring that these data
+sets and databases are regularly updated and accessible will require coordinated efforts within the research
+community, alongside the development of tools and standards that facilitate easy data curation and
+integration.
+Finally, materials databases such as ChemSpider [176], the Cambridge structural database [169], and the
+materials project [184] serve as exemplary models of online accessibility, demonstrating how well-curated
+and easily navigable platforms can support a wide range of research activities. By drawing inspiration from
+these platforms, the quantum chemistry community can develop databases that are not only rich in content
+but also user-friendly and sustainable.
+In conclusion, by addressing these challenges­ranging from the rapid proliferation of data sets to the
+need for standardized formats and long-term accessibility­the future of quantum chemical databases and
+data sets holds immense promise. The integration of active learning, high-throughput calculations, and
+other advanced methodologies will further enhance the utility of these resources, enabling ML potentials to
+reach their full potential in computational chemistry. This synergy between data and algorithms will
+accelerate scientific discovery, driving progress across a wide array of fields and deepening our understanding
+of the molecular world.
+Data availability statement
+No new data were created or analysed in this study.
+Acknowledgments
+A U acknowledges funding from the National Natural Science Foundation of China (No. W2433037). P O D
+acknowledges support from the National Natural Science Foundation of China (funding via the Outstanding
+Youth Scholars (Overseas, 2021) project) and via the Lab project of the State Key Laboratory of Physical
+Chemistry of Solid Surfaces.
+24
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+ORCID iDs
+Arif Ullah  https://orcid.org/0000-0003-1702-3463
+Yuxinxin Chen  https://orcid.org/0000-0001-8398-5690
+Pavlo O Dral  https://orcid.org/0000-0002-2975-9876
+References
+[1] Ramakrishnan R, Dral P O, Rupp M and Von Lilienfeld O A 2014 Quantum chemistry structures and properties of 134 kilo
+molecules Sci. Data 1 1­7
+[2] von Lilienfeld O A, Müller K-R and Tkatchenko A 2020 Exploring chemical compound space with quantum-based machine
+learning Nat. Rev. Chem. 4 347­58
+[3] Smith J S, Zubatyuk R, Nebgen B, Lubbers N, Barros K, Roitberg A E, Isayev O and Tretiak S 2020 The ANI-1ccx and ANI-1x data
+sets, coupled-cluster and density functional theory properties for molecules Sci. Data 7 134
+[4] Wilkinson M D et al 2016 The FAIR guiding principles for scientific data management and stewardship Sci. Data 3 160018
+[5] Meza-González B, Ramírez-Palma D I, Carpio-Martínez P, Vázquez-Cuevas D, Martínez-Mayorga K and Cortés-Guzmán F 2024
+Quantum topological atomic properties of 44k molecules Sci. Data 11 945
+[6] Chen G et al 2024 Alchemy: a quantum chemistry dataset for benchmarking AI models (arXiv:1906.09427 [cs.LG])
+[7] Smith J S, Isayev O and Roitberg A E 2017 ANI-1, a data set of 20 million calculated off-equilibrium conformations for organic
+molecules Sci. Data 4 1­8
+[8] Devereux C, Smith J S, Huddleston K K, Barros K, Zubatyuk R, Isayev O and Roitberg A E 2020 Extending the applicability of the
+ANI deep learning molecular potential to sulfur and halogens J. Chem. Theory Comput. 16 4192­202
+[9] Kayastha P, Chakraborty S and Ramakrishnan R 2022 The resolution-vs.-accuracy dilemma in machine learning modeling of
+electronic excitation spectra Digit. Discov. 1 689­702
+[10] Schütt K T, Arbabzadah F, Chmiela S, Müller K R and Tkatchenko A 2017 Quantum-chemical insights from deep tensor neural
+networks Nat. Commun. 8 13890
+[11] Vinod V and Zaspel P 2024 CheMFi: a multifidelity dataset of quantum chemical properties of diverse molecules (arXiv:2406.
+14149)
+[12] Wahab A, Pfuderer L, Paenurk E and Gershoni-Poranne R 2022 The COMPAS project: a computational database of polycyclic
+aromatic systems. phase 1: cata-condensed polybenzenoid hydrocarbons J. Chem. Inf. Model. 62 3704­13
+[13] Mayo Yanes E, Chakraborty S and Gershoni-Poranne R 2024 COMPAS-2: a dataset of cata-condensed hetero-polycyclic aromatic
+systems Sci. Data 11 97
+[14] Wahab A and Gershoni-Poranne R 2024 COMPAS-3: a dataset of peri-condensed polybenzenoid hydrocarbons Phys. Chem.
+Chem. Phys. 26 15344­57
+[15] Grambow C A, Weir H, Cunningham C N, Biancalani T and Chuang K V 2024 CREMP: conformer-rotamer ensembles of
+macrocyclic peptides for machine learning Sci. Data 11 859
+[16] Axelrod S and Gomez-Bombarelli R 2022 GEOM, energy-annotated molecular conformations for property prediction and
+molecular generation Sci. Data 9 185
+[17] Schütt K T, Kindermans P-J, Sauceda H E, Chmiela S, Tkatchenko A and Müller K-R 2017 Schnet: a continuous-filter
+convolutional neural network for modeling quantum interactions Advances in Neural Information Processing Systems pp 992­1002
+[18] Chmiela S, Tkatchenko A, Sauceda H E, Poltavsky I, Schütt K T and Müller K-R 2017 Machine learning of accurate
+energy-conserving molecular force fields Sci. Adv. 3 1603015
+[19] Christensen A S and Von Lilienfeld O A 2020 On the role of gradients for machine learning of molecular energies and forces
+Mach. Learn. Sci. Technol. 1 045018
+[20] Chmiela S, Sauceda H E, Müller K-R and Tkatchenko A 2018 Towards exact molecular dynamics simulations with
+machine-learned force fields Nat. Commun. 9 3887
+[21] Chmiela S, Vassilev-Galindo V, Unke O T, Kabylda A, Sauceda H E, Tkatchenko A and Müller K-R 2023 Accurate global machine
+learning force fields for molecules with hundreds of atoms Sci. Adv. 9 0873
+[22] Nandi S, Vegge T and Bhowmik A 2023 MultiXC-QM9: large dataset of molecular and reaction energies from multi-level
+quantum chemical methods Sci. Data 10 783
+[23] Khrabrov K et al 2024 2 DFT: a universal quantum chemistry dataset of drug-like molecules and a benchmark for neural
+network potentials (arXiv:2406.14347)
+[24] Célerse F, Wodrich M D, Vela S, Gallarati S, Fabregat R, Juraskova V and Corminboeuf C 2024 From organic fragments to
+photoswitchable catalysts: the OFF-ON structural repository for transferable kernel-based potentials J. Chem. Inf. Model.
+64 1201­12
+[25] Christensen A S et al 2021 A machine learning potential for biological and organic chemistry with semi-empirical cost and DFT
+accuracy J. Chem. Phys. 155 204103
+[26] Glavatskikh M, Leguy J, Hunault G, Cauchy T and Da Mota B 2019 Dataset's chemical diversity limits the generalizability of
+machine learning predictions J. Cheminf. 11 1­15
+[27] Nakata M and Maeda T 2023 PubChemQC B3LYP/6-31G//PM6 data set: the electronic structures of 86 million molecules using
+B3LYP/6-31G calculations J. Chem. Inf. Model. 63 5734­54
+[28] Nakata M and Shimazaki T 2017 PubChemQC project: a large-scale first-principles electronic structure database for data-driven
+chemistry J. Chem. Inf. Model. 57 1300­8
+[29] Nakata M, Shimazaki T, Hashimoto M and Maeda T 2020 PubChemQC PM6: data sets of 221 million molecules with optimized
+molecular geometries and electronic properties J. Chem. Inf. Model. 60 5891­9
+[30] Zhu Y, Li M, Xu C and Lan Z 2024 Quantum chemistry dataset with ground-and excited-state properties of 450 kilo molecules
+Sci. Data 11 948
+[31] Mathiasen A, Helal H, Klaser K, Balanca P, Dean J, Luschi C, Beaini D, Fitzgibbon A and Masters D 2024 Generating QM1B with
+PySCFIPU Advances in Neural Information Processing Systems vol 36
+[32] Rupp M, Tkatchenko A, Müller K-R and Von Lilienfeld O A 2012 Fast and accurate modeling of molecular atomization energies
+with machine learning Phys. Rev. Lett. 108 058301
+25
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+[33] Hoja J, Medrano Sandonas L, Ernst B G, Vazquez-Mayagoitia A, DiStasio R A Jr and Tkatchenko A 2021 QM7-X, a
+comprehensive dataset of quantum-mechanical properties spanning the chemical space of small organic molecules Sci. Data 8 43
+[34] Montavon G, Rupp M, Gobre V, Vazquez-Mayagoitia A, Hansen K, Tkatchenko A, Müller K-R and Von Lilienfeld O A 2013
+Machine learning of molecular electronic properties in chemical compound space New J. Phys. 15 095003
+[35] Ramakrishnan R, Hartmann M, Tapavicza E and Von Lilienfeld O A 2015 Electronic spectra from TDDFT and machine learning
+in chemical space J. Chem. Phys. 143 084111
+[36] Kim H, Park J Y and Choi S 2019 Energy refinement and analysis of structures in the QM9 database via a highly accurate
+quantum chemical method Sci. Data 6 109
+[37] Zou Z, Zhang Y, Liang L, Wei M, Leng J, Jiang J, Luo Y and Hu W 2023 A deep learning model for predicting selected organic
+molecular spectra Nat. Comput. Sci. 3 957­64
+[38] Liang J, Xu Y, Liu R and Zhu X 2019 QM-sym, a symmetrized quantum chemistry database of 135 kilo molecules Sci. Data 6 213
+[39] Liang J, Ye S, Dai T, Zha Z, Gao Y and Zhu X 2020 QM-symex, update of the QM-sym database with excited state information for
+173 kilo molecules Sci. Data 7 400
+[40] Bowman J M, Qu C, Conte R, Nandi A, Houston P L and Yu Q 2022 The MD17 datasets from the perspective of datasets for
+gas-phase "small" molecule potentials J. Chem. Phys. 156 240901
+[41] Isert C, Atz K, Jiménez-Luna J and Schneider G 2022 QMugs, quantum mechanical properties of drug-like molecules Sci. Data
+9 273
+[42] Khan D, Price A J A, Ach M L and von Lilienfeld O A 2024 Adaptive hybrid density functionals (arXiv:2402.14793
+[physics.chem-ph])
+[43] Eastman P et al 2023 Spice, a dataset of drug-like molecules and peptides for training machine learning potentials Sci. Data 10 11
+[44] Eastman P, Pritchard B P, Chodera J D and Markland T E 2024 Nutmeg and SPICE: models and data for biomolecular machine
+learning (arXiv:2406.13112v1 [physics.chem-ph])
+[45] Yao K, Herr J E, Toth D W, Mckintyre R and Parkhill J 2018 The TensorMol-0.1 model chemistry: a neural network augmented
+with long-range physics Chem. Sci. 9 2261­9
+[46] Balcells D and Skjelstad B B 2020 tmQM dataset--quantum geometries and properties of 86k transition metal complexes J.
+Chem. Inf. Model. 60 6135­46
+[47] Schreiner M, Bhowmik A, Vegge T, Busk J and Winther O 2022 Transition1x-a dataset for building generalizable reactive machine
+learning potentials Sci. Data 9 779
+[48] Zhang L, Zhang S, Owens A, Yurchenko S N and Dral P O 2022 VIB5 database with accurate ab initio quantum chemical
+molecular potential energy surfaces Sci. Data 9 84
+[49] Khan D, Benali A, Kim S Y, von Rudorff G F and von Lilienfeld O A 2024 Towards comprehensive coverage of chemical space:
+quantum mechanical properties of 836k constitutional and conformational closed shell neutral isomers consisting of
+HCNOFSiPSClBr (arXiv:2405.05961)
+[50] Pinheiro M Jr, Zhang S, Dral P O and Barbatti M 2023 WS22 database, wigner sampling and geometry interpolation for
+configurationally diverse molecular datasets Sci. Data 10 95
+[51] Pengmei Z, Liu J and Shu Y 2024 Beyond MD17: the reactive xxMD dataset Sci. Data 11 222
+[52] Ruddigkeit L, Van Deursen R, Blum L C and Reymond J-L 2012 Enumeration of 166 billion organic small molecules in the
+chemical Universe database GDB-17 J. Chem. Inf. Model. 52 2864­75
+[53] Stewart J J 1990 MOPAC: a semiempirical molecular orbital program J. Comput. Aided Mol. Des. 4 1­103
+[54] Beck A D 1993 Density-functional thermochemistry. III. The role of exact exchange J. Chem. Phys 98 5648­6
+[55] Stephens P J, Devlin F J, Chabalowski C F and Frisch M J 1994 Ab initio calculation of vibrational absorption and circular
+dichroism spectra using density functional force fields J. Chem. Phys. 98 11623­7
+[56] Ditchfield R, Hehre W J and Pople J A 1971 Self-consistent molecular-orbital methods. IX. An extended Gaussian-type basis for
+molecular-orbital studies of organic molecules J. Chem. Phys. 54 724­8
+[57] Krishnan R, Binkley J S, Seeger R and Pople J A 1980 Self-consistent molecular orbital methods. XX. A basis set for correlated
+wave functions J. Chem. Phys. 72 650­4
+[58] Frisch M J et al 2009 Gaussian 09, revision d. 01 (Gaussian. Inc) vol 201
+[59] Curtiss L A, Redfern P C and Raghavachari K 2007 Gaussian-4 theory using reduced order perturbation theory J. Chem. Phys.
+127 124105
+[60] Ramakrishnan R, Dral P O, Rupp M and Von Lilienfeld O A 2014 Quantum chemistry structures and properties of 134 kilo
+molecules Figshare (available at: https://doi.org/10.6084/m9.Figshare.978904) (Accessed 7 April 2024)
+[61] Curtiss L A, Redfern P C and Raghavachari K 2007 Gaussian-4 theory J. Chem. Phys. 126 084108
+[62] Frisch M J et al 2016 Gaussian 16 Revision C.01 (Gaussian Inc)
+[63] Kim H, Park J Y and Choi S 2019 Highly accurate G4(MP2) benchmark on QM9 database: energy refinement and analysis of
+structures Figshare (available at: https://doi.org/10.6084/m9.Figshare.c.4351631.v1) (Accessed 8 April 2024)
+[64] Bannwarth C, Caldeweyher E, Ehlert S, Hansen A, Pracht P, Seibert J, Spicher S and Grimme S 2021 Extended tight-binding
+quantum chemistry methods Wiley Interdiscip. Rev. Comput. Mol. Sci. 11 1493
+[65] Te Velde G, Bickelhaupt F M, Baerends E J, Fonseca Guerra C, van Gisbergen S J, Snijders J G and Ziegler T 2001 Chemistry with
+ADF J. Comput. Chem. 22 931­67
+[66] Perdew J P, Burke K and Ernzerhof M 1996 Generalized gradient approximation made simple Phys. Rev. Lett. 77 3865
+[67] Nandi S, Vegge T and Bhowmik A 2023 MultiXC-QM9 Figshare (available at: https://doi.org/10.11583/DTU.c.6185986.v3)
+(Accessed 8 April 2024)
+[68] Sun Q 2015 Libcint: an efficient general integral library for Gaussian basis functions J. Comput. Chem. 36 1664­71
+[69] Sun Q et al 2017 PySCF: the Python-based simulations of chemistry framework WIREs Comput. Mol. Sci. 8 1340
+[70] Sun Q et al 2020 Recent developments in the PySCF program package J. Chem. Phys. 153 024109
+[71] GKhan D 2024 aPBE0 GitHub (available at: https://github.com/dkhan42/aPBE0) (Accessed 26 September 26 2024)
+[72] Khan D and von Lilienfeld A 2024 Revised QM9 dataset ( Zenodo) (availabe at: https://zenodo.org/doi/10.5281/ zenodo.
+10689883) (Accessed 26 September 2024)
+[73] Keith T A AIMAll (version 19.10.12). TK Gristmill Software, Overland Park KS, USA (2019(aim.tkgristmill.com))
+[74] Meza-González B, Ramírez-Palma D I, Carpio-Martínez P, Vázquez-Cuevas D, Martínez-Mayorga K and Cortés-Guzmán F 2024
+AIMEl-DB data set at Zenodo (Zenodo)(available at: https://zenodo.org/records/11406726) (Accessed 26 September 2024)
+[75] Seifert G, Porezag D and Frauenheim T 1996 Calculations of molecules, clusters and solids with a simplified LCAO-DFT-LDA
+scheme Int. J. Quantum Chem. 58 185­92
+26
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+[76] Tkatchenko A, DiStasio R A Jr, Car R and Scheffler M 2012 Accurate and efficient method for many-body van der waals
+interactions Phys. Rev. Lett. 108 236402
+[77] Blum L C and Reymond J-L 2009 970 million druglike small molecules for virtual screening in the chemical Universe database
+gdb-13 J. Am. Chem. Soc. 131 8732­3
+[78] Halgren T A 1996 Merck molecular force field. I. Basis, form, scope, parameterization and performance of mmff94 J. Comput.
+Chem. 17 490­519
+[79] O'Boyle N M, Vandermeersch T, Flynn C J, Maguire A R and Hutchison G R 2011 Confab-systematic generation of diverse
+low-energy conformers J. Cheminf. 3 1­9
+[80] Blum V, Gehrke R, Hanke F, Havu P, Havu V, Ren X, Reuter K and Scheffler M 2009 Ab initio molecular simulations with numeric
+atom-centered orbitals Comput. Phys. Commun. 180 2175­96
+[81] Hoja J, Medrano Sandonas L, Ernst B G, Vazquez-Mayagoitia A, DiStasio R A Jr and Tkatchenko A 2020 QM7-X, a
+comprehensive dataset of quantum-mechanical properties spanning the chemical space of small organic molecules Zenodo
+https://doi.org/10.5281/zenodo.4288677 (Accessed 9 April 2024)
+[82] Guha R, Howard M T, Hutchison G R, Murray-Rust P, Rzepa H, Steinbeck C, Wegner J and Willighagen E L 2006 The Blue
+Obelisk--interoperability in chemical informatics J. Chem. Inf. Model. 46 991­8
+[83] Rupp M, Tkatchenko A, Müller K-R and Von Lilienfeld O A 2012 QM7 dataset(available at: http://quantum-machine.org/
+datasets/#qm7) (Accessed 9 April 2024)
+[84] Weininger D 1988 SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules J.
+Chem. Inf. Comput. Sci. 28 31­36
+[85] Rappé A K, Casewit C J, Colwell K, Goddard W A III and Skiff W M 1992 UFF, a full periodic table force field for molecular
+mechanics and molecular dynamics simulations J. Am. Chem. Soc. 114 10024­35
+[86] Hedin L 1965 New method for calculating the one-particle green's function with application to the electron-gas problem Phys.
+Rev. 139 796
+[87] Neese F 2022 Software update: The ORCA program system--Version 5.0 Wiley Interdiscip. Rev. Comput. Mol. Sci. 12 e1606
+[88] Montavon G, Rupp M, Gobre V, Vazquez-Mayagoitia A, Hansen K, Tkatchenko A, Müller K-R and Von Lilienfeld O A 2013
+QM7b dataset(available at: http://stacks.iop.org/NJP/15/095003/mmedia) (Accessed 15 April 2024)
+[89] Furche F, Ahlrichs R, Hättig C, Klopper W, Sierka M and Weigend F 2014 Turbomole Wiley Interdiscip. Rev. Comput. Mol. Sci.
+4 91­100
+[90] Furche F and Ahlrichs R 2002 Adiabatic time-dependent density functional methods for excited state properties J. Chem. Phys.
+117 7433­47
+[91] Perdew J P, Ernzerhof M and Burke K 1996 Rationale for mixing exact exchange with density functional approximations J. Chem.
+Phys. 105 9982­5
+[92] Weigend F and Ahlrichs R 2005 Balanced basis sets of split valence, triple zeta valence and quadruple zeta valence quality for H to
+Rn: design and assessment of accuracy Phys. Chem. Chem. Phys. 7 3297­305
+[93] Hättig C and Weigend F 2000 CC2 excitation energy calculations on large molecules using the resolution of the identity
+approximation J. Chem. Phys. 113 5154­61
+[94] Chen G, Chen P, Hsieh C-Y, Lee C-K, Liao B, Liao R, Liu W, Qiu J, Sun Q, Tang J, Zemel R and Zhang S 2024 Alchemy data set
+GitHub (available at: https://github.com/tencent-alchemy/Alchemy) (Accessed 26 September 2024)
+[95] Fink T, Bruggesser H and Reymond J-L 2005 Virtual exploration of the small-molecule chemical Universe below 160 daltons
+Angew. Chem., Int. Ed. 44 1504­8
+[96] Fink T and Reymond J-L 2007 Virtual exploration of the chemical Universe up to 11 atoms of c, n, o, f: assembly of 26.4 million
+structures (110.9 million stereoisomers) and analysis for new ring systems, stereochemistry, physicochemical properties,
+compound classes and drug discovery J. Chem., Inf. Model. 47 342­53
+[97] Landrum G et al RDKit 2022(available at: https://www.rdkit.org/) (Accessed 7 July 2024)
+[98] Mathiasen A, Helal H, Klaeser K, Balanca P, Dean J, Luschi C, Beaini D, Fitzgibbon A W and Masters D 2023 QM1B dataset
+GitHub (available at: https://github.com/graphcore-research/qm1b-dataset) (Accessed 16 April 2024)
+[99] Smith D G A et al 2020 PSI4 1.4: open-source software for high-throughput quantum chemistry J. Chem. Phys. 152 184108
+[100] Najibi A and Goerigk L 2018 The nonlocal kernel in van der waals density functionals as an additive correction: an extensive
+analysis with special emphasis on the B97M-V and B97M-V approaches J. Chem. Theory Comput. 14 5725­38
+[101] Eastman P, Behara P K, Dotson D L, Galvelis R, Herr J E, Horton J T, Mao Y, Chodera J D, Pritchard B P, Wang Y, Fabritiis G D
+and Markland T E 2022 SPICE 1.1.2 (Zenodo)(available at: https://doi.org/10.5281/zenodo.7338495) (Accessed 16 April 2024)
+[102] Kim S et al 2023 PubChem 2023 update Nucl. Acids Res. 51 1373­80
+[103] Nakata M and Shimazaki T 2017 PubChemQC database Originally accessible at https://pubchemqc.riken.jp, the dataset has been
+temporarily relocated to https://nakatamaho.riken.jp/pubchemqc.riken.jp/ (Accessed 17 April 2024)
+[104] Nakata M, Shimazaki T, Hashimoto M and Maeda T 2020 PubChemQC PM6 data sets Originally accessible at http://pubchemqc.
+riken.jp/pm6_datasets.html, the dataset has been temporarily relocated to https://nakatamaho.riken.jp/pubchemqc.riken.jp/
+pm6_datasets.html (Accessed 18 April 2024)
+[105] Nakata M and Maeda T 2023 PubChemQC B3LYP/6-31G//PM6 Data Set. The PubChemQC B3LYP/6-31G//PM6 data set is
+freely available for download at https://nakatamaho.riken.jp/pubchemqc.riken.jp/b3lyp_pm6_datasets.html under a creative
+commons license (Accessed 23 May 2024)
+[106] Glavatskikh M, Leguy J, Hunault G, Cauchy T and Da Mota B 2019 PC9 dataset Figshare (available at: https://doi.org/10.6084/
+m9.figshare.9033977.v1) (Accessed 16 April 2024)
+[107] Glavatskikh M, Leguy J, Hunault G, Cauchy T and Da Mota B 2019 PC9 dataset Zenodo(available at: https://doi.org/10.5281/
+zenodo.3588370) (Accessed 16 April 2024)
+[108] Senthil S, Chakraborty S and Ramakrishnan R 2021 Troubleshooting unstable molecules in chemical space Chem. Sci. 12 5566­73
+[109] Chai J-D and Head-Gordon M 2008 Long-range corrected hybrid density functionals with damped atom­atom dispersion
+corrections Phys. Chem. Chem. Phys. 10 6615­20
+[110] Kayastha P, Chakraborty S and Ramakrishnan R 2022 The bigQM7 dataset The core data, encompassing structures, ground state
+properties, and electronic spectra, is conveniently available for download at https://moldisgroup.github.io/bigQM7w. For deeper
+analysis, the NOMAD repository at https://dx.doi.org/10.17172/NOMAD/2021.09.30-1 provides the input and output files from
+the corresponding calculations. Additionally, a data-mining platform is available at https://moldis.tifrh.res.in/index.html
+[111] Mendez D et al 2019 ChEMBL: towards direct deposition of bioassay data Nucl. Acids Res. 47 930­40
+27
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+[112] Grimme S, Bannwarth C and Shushkov P 2017 A robust and accurate tight-binding quantum chemical method for structures,
+vibrational frequencies and noncovalent interactions of large molecular systems parametrized for all spd-block elements (z =
+1­86) J. Chem. Theory Comput. 13 1989­2009
+[113] Bannwarth C, Ehlert S and Grimme S 2019 GFN2-xTB--an accurate and broadly parametrized self-consistent tight-binding
+quantum chemical method with multipole electrostatics and density-dependent dispersion contributions J. Chem. Theory
+Comput. 15 1652­71
+[114] Isert C, Atz K, Jiménez-Luna J and Schneider G 2022 QMugs, quantum mechanical properties of drug-like molecules ETH library
+collection service (available at: https://doi.org/10.3929/ethz-b-000482129) (Accessed 23 May 2024)
+[115] Zdrazil B et al 2024 The ChEMBL database in 2023: a drug discovery platform spanning multiple bioactivity data types and time
+periods Nucl. Acids Res. 52 1180­92
+[116] Folmsbee D and Hutchison G 2021 Assessing conformer energies using electronic structure and machine learning methods Int. J.
+Quantum Chem. 121 26381
+[117] Jurec
+ka P, 
+Sponer J, 
+Cerny J and Hobza P 2006 Benchmark database of accurate (MP2 and CCSD(T) complete basis set limit)
+interaction energies of small model complexes, dna base pairs and amino acid pairs Phys. Chem. Chem. Phys. 8 1985­93
+[118] Burns L A, Faver J C, Zheng Z, Marshall M S, Smith D G, Vanommeslaeghe K, MacKerell A D, Merz K M and Sherrill C D 2017
+The BioFragment Database (BFDb): an open-data platform for computational chemistry analysis of noncovalent interactions J.
+Chem. Phys. 147 161727
+[119] Christensen A S et al 2021 OrbNet denali training data Figshare https://doi.org/10.6084/m9.Figshare.14883867 (Accessed 27 May
+2024)
+[120] Ernzerhof M and Scuseria G E 1999 Assessment of the Perdew­Burke­Ernzerhof exchange-correlation functional J. Chem. Phys.
+110 5029­36
+[121] Chmiela S, Tkatchenko A, Sauceda H E, Poltavsky I, Schütt K T and Müller K-R 2017 Original MD17 (available at: www.sgdml.
+org/#datasets) (Accessed 27 May 2024)
+[122] Christensen A S and Von Lilienfeld O A 2017 Original MD17 Figshare (available at: https://dx.doi.org/10.6084/m9.Figshare.
+12672038) (Accessed 27 May 2024)
+[123] Fey M and Lenssen J E 2019 Fast graph representation learning with PyTorch geometric (arXiv:1903.02428)
+[124] Mai S, Marquetand P and González L 2018 Nonadiabatic dynamics: the SHARC approach Wiley Interdiscip. Rev. Comput. Mol.
+Sci. 8 1370
+[125] Roos B O, Taylor P R and Sigbahn P E 1980 A complete active space SCF method (CASSCF) using a density matrix formulated
+super-CI approach Chem. Phys. 48 157­73
+[126] Fdez. Galván I et al 2019 OpenMolcas: from source code to insight J. Chem. Theory Comput. 15 5925­64
+[127] Zhao Y and Truhlar D G 2008 The M06 suite of density functionals for main group thermochemistry, thermochemical kinetics,
+noncovalent interactions, excited states and transition elements: two new functionals and systematic testing of four M06-class
+functionals and 12 other functionals Theor. Chem. Acc. 120 215­41
+[128] Hjorth Larsen A et al 2017 The atomic simulation environment--a python library for working with atoms J. Condens. Matter
+Phys. 29 273002
+[129] Pengmei Z, Liu J and Shu Y Beyond MD17: the reactive xxMD dataset 2024 GitHub https://github.com/zpengmei/xxMD and
+Zenodo https://doi.org/10.5281/zenodo.10393859 (Accessed 27 May 2024)
+[130] Chmiela S, Vassilev-Galindo V, Unke O T, Kabylda A, Sauceda H E, Tkatchenko A and Müller K-R 2023 MD22 (available at: www.
+sgdml.org/#datasets) (Accessed 27 May 2024)
+[131] Colomés E, Zhan Z and Oriols X 2015 Comparing Wigner, Husimi and Bohmian distributions: which one is a true probability
+distribution in phase space? J. Comput. Electron. 14 894­906
+[132] Zhu X, Thompson K C and Martínez T J 2019 Geodesic interpolation for reaction pathways J. Chem. Phys. 150 164103
+[133] Pinheiro M Jr, Zhang S, Dral P O and Barbatti M 2023 The WS22 database Zenodo https://doi.org/10.5281/zenodo.7032334
+(Accessed 27 May 2024)
+[134] Werner H-J, Knowles P J, Knizia G, Manby F R and Schütz M 2012 Molpro: a general-purpose quantum chemistry program
+package Wiley Interdiscip. Rev. Comput. Mol. Sci. 2 242­53
+[135] Werner H-J et al 2020 The Molpro quantum chemistry package J. Chem. Phys. 152 144107
+[136] Matthews D A, Cheng L, Harding M E, Lipparini F, Stopkowicz S, Jagau T-C, Szalay P G, Gauss J and Stanton J F 2020
+Coupled-cluster techniques for computational chemistry: the CFOUR program package J. Chem. Phys. 152 214108
+[137] Zhang L, Zhang S, Owens A, Yurchenko S N and Dral P O 2022 VIB5 database Figshare (available at: https://doi.org/10.6084/m9.
+figshare.1690328879) (Accessed 6 June 2024)
+[138] Smith J S, Isayev O and Roitberg A E 2017 ANI-1: an extensible neural network potential with dft accuracy at force field
+computational cost Chem. Sci. 8 3192­203
+[139] Smith J S, Isayev O and Roitberg A E 2017 ANI-1, A data set of 20 million calculated off-equilibrium conformations for organic
+molecules Figshare https://doi.org/10.6084/m9.figshare.5287732.v1; GitHub https://github.com/isayev/ANI1_dataset (Accessed
+11 June 2024)
+[140] Smith J S, Nebgen B, Lubbers N, Isayev O and Roitberg A E 2018 Less is more: sampling chemical space with active learning J.
+Chem. Phys. 148 241733
+[141] Smith J S, Nebgen B T, Zubatyuk R, Lubbers N, Devereux C, Barros K, Tretiak S, Isayev O and Roitberg A E 2019 Approaching
+coupled cluster accuracy with a general-purpose neural network potential through transfer learning Nat. Commun. 10 2903
+[142] Smith J S, Zubatyuk R, Nebgen B, Lubbers N, Barros K, Roitberg A E, Isayev O and Tretiak S 2020 The ANI-1ccx and ANI-1x data
+sets, coupled-cluster and density functional theory properties for molecules Figshare (available at: https://doi.org/10.6084/m9.
+figshare.c.4712477; GitHub https://github.com/aiqm/ANI1x_datasets) (Accessed 11 June 2024)
+[143] Neese F, Wennmohs F, Becker U and Riplinger C 2020 The ORCA quantum chemistry program package J. Chem. Phys.
+152 224108
+[144] Brauer B, Kesharwani M K, Kozuch S and Martin J M L 2016 The S66x8 benchmark for noncovalent interactions revisited:
+explicitly correlated ab initio methods and density functional theory Phys. Chem. Chem. Phys. 18 20905­25
+[145] Devereux C, Smith J S, Huddleston K K, Barros K, Zubatyuk R, Isayev O and Roitberg A E 2020 ANI-2 data set (Zenodo)
+(available at: https://doi.org/10.5281/zenodo.10108942) (Accessed 22 August 2024)
+[146] Sheppard D, Terrell R and Henkelman G 2008 Optimization methods for finding minimum energy paths J. Chem. Phys.
+128 134106
+28
+Mach. Learn.: Sci. Technol. 5 (2024) 041001 A Ullah et al
+[147] Grambow C A, Pattanaik L and Green W H 2020 Reactants, products and transition states of elementary chemical reactions based
+on quantum chemistry Sci. Data 7 137
+[148] Chai J-D and Head-Gordon M 2008 Systematic optimization of long-range corrected hybrid density functionals J. Chem. Phys.
+128 084106
+[149] Henkelman G, Uberuaga B P and Jónsson H 2000 A climbing image nudged elastic band method for finding saddle points and
+minimum energy paths J. Chem. Phys. 113 9901­4
+[150] Smidstrup S, Pedersen A, Stokbro K and Jónsson H 2014 Improved initial guess for minimum energy path calculations J. Chem.
+Phys. 140 214106
+[151] Schreiner M, Bhowmik A, Vegge T, Busk J and Winther O 2022 Transition1x-a dataset for building generalizable reactive machine
+learning potentials Figshare (available at: https://doi.org/10.6084/m9.figshare.19614657.v4; GitHub https://gitlab.com/
+matschreiner/Transition1x) (Accessed 17 July 2024)
+[152] Liang, Xu Y, Liu R and Zhu X 2019 QM-sym-database GitHub (available at: https://github.com/XI-Lab/QM-sym-database)
+(Accessed 2 April 2024)
+[153] Liang, Xu Y, Liu R and Zhu X 2019 QM-sym-database Figshare (available at: https://doi.org/10.6084/m9.Figshare.9638093)
+(Accessed 2 April 2024)
+[154] Liang, Xu Y, Liu R and Zhu X 2020 QM-symex-database Figshare (available at: https://doi.org/10.6084/m9.Figshare.12815276)
+(Accessed 2 April 2024)
+[155] Khrabrov K et al 2022 nablaDFT: large-scale conformational energy and Hamiltonian prediction benchmark and dataset Phys.
+Chem. Chem. Phys. 24 25853­63
+[156] Polykovskiy D et al 2020 Molecular sets (MOSES): a benchmarking platform for molecular generation models Front. Pharmacol.
+11 565644
+[157] Bemis G W and Murcko M A 1996 The properties of known drugs. 1. Molecular frameworks J. Med. Chem. 39 2887­93
+[158] Degen J, Wegscheid-Gerlach C, Zaliani A and Rarey M 2008 On the art of compiling and using `drug-like' chemical fragment
+spaces ChemMedChem 3 1503
+[159] Barnard J M and Downs G M 1992 Clustering of chemical structures on the basis of two-dimensional similarity measures J.
+Chem. Inf. Comput. Sci. 32 644­9
+[160] Brinkmann G, Friedrichs O, Lisken S, Peeters A and Van Cleemput N 2010 CaGe - a virtual environment for studying some
+special classes of plane graphs - an update MATCH Commun. Math. Comput. Chem. 63 533­52
+[161] Wahab A, Pfuderer L, Paenurk E and Gershoni-Poranne R 2022 The COMPAS project GitLab (available at: https://gitlab.com/
+porannegroup/compas and https://compas.net.technion.ac.il/) (Accessed 26 September 2024)
+[162] Li J, Yanagisawa K, Sugita M, Fujie T, Ohue M and Akiyama Y 2023 CycPeptMPDB: a comprehensive database of membrane
+permeability of cyclic peptides J. Chem. Inf. Model. 63 2240­50
+[163] Riniker S and Landrum G A 2015 Better informed distance geometry: using what we know to improve conformation generation
+J. Chem. Inf. Model. 55 2562­74
+[164] Pracht P, Bohle F and Grimme S 2020 Automated exploration of the low-energy chemical space with fast quantum chemical
+methods Phys. Chem. Chem. Phys. 22 7169­92
+[165] Grambow C A, Weir H, Cunningham C N, Biancalani T and Chuang K V 2024 CREMP data sets Zenodo https://doi.org/10.5281/
+zenodo.7931444 and https://doi.org/10.5281/zenodo.10798261; GitHub https://github.com/Genentech/cremp (Accessed 26
+September 2024)
+[166] Wu Z, Ramsundar B, Feinberg E N, Gomes J, Geniesse C, Pappu A S, Leswing K and Pande V 2018 Moleculenet: a benchmark for
+molecular machine learning Chem. Sci. 9 513­30
+[167] Grimme S, Bohle F, Hansen A, Pracht P, Spicher S and Stahn M 2021 Efficient quantum chemical calculation of structure
+ensembles and free energies for nonrigid molecules J. Chem. Phys. A 125 4039­54
+[168] Axelrod S and Gomez-Bombarelli R 2022 GEOM on GitHub GitHub (available at: https://github.com/learningmatter-mit/geom)
+(Accessed 26 September 2024)
+[169] Groom C R, Bruno I J, Lightfoot M P and Ward S C 2016 The Cambridge structural database Struct. Sci. 72 171­9
+[170] Kneiding H, Lukin R, Lang L, Reine S, Pedersen T B, De Bin R and Balcells D 2023 Deep learning metal complex properties with
+natural quantum graphs Digit. Discov. 2 618­33
+[171] Kneiding H, Nova A and Balcells D 2024 Directional multiobjective optimization of metal complexes at the billion-system scale
+Nat. Comput. Sci. 4 263­73
+[172] Célerse F, Wodrich M D, Vela S, Gallarati S, Fabregat R, Juraskova V and Corminboeuf C 2024 The OFF-ON database Materials
+cloud (available at: https://archive.materialscloud.org/record/2023.189) (Accessed 26 September 2024)
+[173] McKay B D, Yirik M A and Steinbeck C 2022 Surge: a fast open-source chemical graph generator J. Cheminf. 14 24
+[174] Kent P R et al 2020 QMCPACK: advances in the development, efficiency and application of auxiliary field and real-space
+variational and diffusion quantum Monte Carlo J. Chem. Phys. 152 174105
+[175] Grimme S, Ehrlich S and Goerigk L 2011 Effect of the damping function in dispersion corrected density functional theory J.
+Comput. Chem. 32 1456­65
+[176] Pence H E and Williams A 2010 ChemSpider: an online chemical information resource J. Chem. Educ. 87 1123­4
+[177] Herr J E, Yao K, McIntyre R, Toth D W and Parkhill J 2018 Metadynamics for training neural network model chemistries: a
+competitive assessment J. Chem. Phys. 148 241710
+[178] Shao Y et al 2015 Advances in molecular quantum chemistry contained in the q-chem 4 program package Mol. Phys. 113 184­215
+[179] Alvarez-Moreno M, de Graaf C, Lopez N, Maseras F, Poblet J M and Bo C 2015 Managing the computational chemistry big data
+problem: the ioChem-BD platform J. Chem. Inf. Model. 55 95­103
+[180] Smith D G A et al 2021 Quantum Chemistry Common Driver and Databases (QCDB) and Quantum Chemistry Engine
+(QCEngine): automation and interoperability among computational chemistry programs J. Chem. Phys. 155 204801
+[181] Dral P O et al 2024 MLatom 3: a platform for machine learning-enhanced computational chemistry simulations and workflows J.
+Chem. Theory Comput. 20 1193­213
+[182] Chen Y and Dral P O 2024 All-in-one foundational models learning across quantum chemical levels ChemRxiv Preprint https://
+doi.org/10.26434/chemrxiv-2024-ng3ws (posted online 18 September 2024, accessed 9 November 2024)
+[183] Chen Y, Hou Y-F, Isayev O and Dral P O 2024 Universal and updatable artificial intelligence-enhanced quantum chemical
+foundational models ChemRxiv Preprint https://doi.org/10.26434/chemrxiv-2024-604wb (posted online 26 June 2024, accessed 9
+November 2024)
+[184] Jain A et al 2018 The Materials Project: Accelerating Materials Design Through Theory-Driven Data and Tools ed W Andreoni and
+S Yip (Springer) pp 1­34
+29
+

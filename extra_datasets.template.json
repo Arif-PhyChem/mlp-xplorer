@@ -1,0 +1,18 @@
+{
+  "datasets": [
+    {
+      "section": "extra.1",
+      "dataset_name": "Example Dataset Name",
+      "summary": "Short overview of what this dataset or review contribution contains.",
+      "computational_methodology": "How the data was generated, curated, or evaluated.",
+      "data_accessibility": "Where the data can be accessed, downloaded, or cited.",
+      "full_text": "A fuller combined description that the chat system can search directly.",
+      "cited_references": [
+        "custom-1"
+      ],
+      "reference_entries": {
+        "custom-1": "Example citation or URL for the added dataset/review."
+      }
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MLP-Xplorer Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="modern-shell">
+    <aside class="side-rail">
+      <div class="brand-lockup">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M32 6 51 17v22L32 58 13 47V17L32 6Z" stroke="currentColor" stroke-width="3"/>
+            <circle cx="32" cy="32" r="10" stroke="currentColor" stroke-width="3"/>
+            <circle cx="32" cy="14" r="4" fill="currentColor"/>
+            <circle cx="48" cy="24" r="4" fill="currentColor"/>
+            <circle cx="48" cy="42" r="4" fill="currentColor"/>
+            <circle cx="32" cy="50" r="4" fill="currentColor"/>
+            <circle cx="16" cy="42" r="4" fill="currentColor"/>
+            <circle cx="16" cy="24" r="4" fill="currentColor"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">MLP-Xplorer</div>
+          <div class="brand-subtitle">Your AI Assistant for Molecular ML Datasets</div>
+        </div>
+      </div>
+
+      <form method="post" action="/reset-chat" class="new-chat-form">
+        <input type="hidden" name="session_id" value="__SESSION_ID__">
+        <input type="hidden" name="ui_variant" value="__UI_VARIANT__">
+        <button class="new-chat-button" type="submit">
+          <span class="button-icon">+</span>
+          <span>New Chat</span>
+        </button>
+      </form>
+
+      <nav class="rail-nav" aria-label="Primary">
+        <button class="rail-link is-active" type="button" data-nav-target="chatTop"><span class="rail-ico">C</span><span>Chat</span></button>
+      </nav>
+
+      <section id="historyCard" class="history-card">
+        <div class="panel-title">Recent Questions</div>
+        <div id="historyList" class="history-list modern-history-list">__HISTORY_HTML__</div>
+      </section>
+
+      <section id="statusCard" class="status-card">
+        <div class="status-label">Mode</div>
+        <div id="modeName" class="status-mode">Fallback (Local KB)</div>
+        <div class="status-divider"></div>
+        <div class="status-label">Status</div>
+        <div id="statusDetail" class="status-note">__STATUS__</div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <header id="chatTop" class="topbar">
+        <div class="topbar-title">
+          <div class="chat-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <rect x="10" y="8" width="28" height="24" rx="8" stroke="currentColor" stroke-width="3"/>
+              <path d="M18 32v8l7-5h5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="20" cy="20" r="2.5" fill="currentColor"/>
+              <circle cx="28" cy="20" r="2.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <div>
+            <h1>MLP-Xplorer Chat</h1>
+            <p>Paper-grounded molecular dataset exploration</p>
+          </div>
+        </div>
+        <div id="statusBadge" class="status-badge">Fallback Mode (Local KB)</div>
+      </header>
+
+      <div class="content-grid">
+        <section class="chat-column">
+          <div id="messages" class="modern-messages">__MESSAGES_HTML__</div>
+
+          <div id="starterRow" class="starter-row">__STARTER_HTML__</div>
+
+          <form id="composerForm" class="composer-panel" method="post" action="/chat">
+            <input type="hidden" name="session_id" value="__SESSION_ID__">
+            <input type="hidden" name="ui_variant" value="__UI_VARIANT__">
+            <label class="composer-label" for="prompt">Ask a follow-up question</label>
+            <div class="composer-row">
+              <textarea id="prompt" name="message" placeholder="Ask a follow-up question...">__DRAFT__</textarea>
+              <button id="sendButton" class="send-button" type="submit" aria-label="Send">Send</button>
+            </div>
+            <div class="composer-footer">
+              <div id="status" class="composer-status">__STATUS__</div>
+              <button id="clearHistoryButton" class="clear-button" type="button">Clear History</button>
+            </div>
+          </form>
+
+          <p class="footer-note">Responses are generated from the paper knowledge base first, with references kept visible for quick review.</p>
+        </section>
+
+        <aside class="reference-column">
+          <section id="referencePanel" class="reference-panel">
+            <div class="reference-head">
+              <div>
+                <div class="panel-title">References</div>
+                <div class="panel-subtitle">Citations from this answer</div>
+              </div>
+              <button id="toggleReferences" class="toggle-references" type="button" aria-expanded="true">^</button>
+            </div>
+            <div id="referenceList" class="reference-list">
+              <div class="reference-empty">References from the latest assistant response will appear here.</div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    window.__MLPXPLORER__ = {
+      sessionId: "__SESSION_ID__",
+      uiVariant: "__UI_VARIANT__"
+    };
+  </script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
